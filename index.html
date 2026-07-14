@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vaisoverse | AI-Powered Hospital & Healthcare Management Platform</title>
+  <meta name="description" content="Empower your hospital with Vaisoverse, the ultimate AI-driven healthcare operations, patient analytics, bed tracking, and appointment scheduling platform.">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Toast Notification System -->
+  <div id="toast-container" class="toast-container">
+    <div class="toast">
+      <i class="fa-solid fa-circle-check toast-icon"></i>
+      <span id="toast-message">Notification Message</span>
+    </div>
+  </div>
+
+  <!-- ===== HEADER ===== -->
+  <header id="main-header">
+    <div class="container">
+      <div class="nav-wrapper">
+        <a href="#" class="logo">
+          <img src="assets/images/Logo.png" alt="Vaisoverse" class="logo-img">
+          <span class="logo-text">Vaiso</span><span class="logo-highlight">verse</span>
+        </a>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="#home" class="nav-link-active">Home</a></li>
+          <li><a href="#why-choose-us">Why Us</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li class="nav-cta-mobile"><a href="doctor.html"><i class="fa-solid fa-user-doctor"></i> Doctor Portal</a></li>
+        </ul>
+        <div class="header-actions">
+          <button class="notif-bell-btn" id="notif-bell-btn" onclick="toggleNotifPanel()" aria-label="Notifications">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-badge" id="notif-badge" style="display:none">0</span>
+          </button>
+          <a href="doctor.html" class="btn btn-ghost doctor-link"><i class="fa-solid fa-user-doctor"></i> Doctor Portal</a>
+          <button class="btn btn-primary" onclick="openDemoModal()">Book Demo</button>
+        </div>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle Navigation Menu">
+          <i class="fa-solid fa-bars-staggered"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== NOTIFICATION PANEL ===== -->
+  <div class="notif-overlay" id="notif-overlay" onclick="closeNotifPanel()"></div>
+  <aside class="notif-panel" id="notif-panel">
+    <div class="notif-panel-header">
+      <div>
+        <h3><i class="fa-solid fa-bell"></i> Notifications</h3>
+        <p id="notif-count-label">No new messages</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="notif-clear-btn" onclick="clearAllNotifications()">Clear all</button>
+        <button class="notif-close-btn" onclick="closeNotifPanel()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+    <div class="notif-list" id="notif-list">
+      <div class="notif-empty-state" id="notif-empty">
+        <div class="notif-empty-icon"><i class="fa-regular fa-bell-slash"></i></div>
+        <p>Your inbox is empty.<br>OTP codes and appointment confirmations will appear here.</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero" id="home">
+    <div class="hero-bg-particles"></div>
+    <div class="hero-gradient-orb hero-orb-1"></div>
+    <div class="hero-gradient-orb hero-orb-2"></div>
+    <div class="hero-gradient-orb hero-orb-3"></div>
+
+    <div class="floating-icons-container">
+      <img src="assets/images/claymation_stethoscope.png" alt="" class="clay-icon clay-stethoscope">
+      <img src="assets/images/claymation_cross.png" alt="" class="clay-icon clay-cross">
+      <svg viewBox="0 0 100 100" class="clay-icon clay-heart" fill="url(#heartGrad)">
+        <defs>
+          <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FF3B30" />
+            <stop offset="100%" stop-color="#FF2D55" />
+          </linearGradient>
+          <filter id="heartShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#FF2D55" flood-opacity="0.3"/>
+          </filter>
+        </defs>
+        <path d="M50,88 C50,88 10,54 10,32 C10,18 20,8 32.5,8 C40,8 46.5,13 50,18 C53.5,13 60,8 67.5,8 C80,8 90,18 90,32 C90,54 50,88 50,88 Z" filter="url(#heartShadow)"/>
+      </svg>
+      <div class="clay-icon clay-badge clay-pill-b" aria-hidden="true"><i class="fa-solid fa-pills"></i></div>
+      <div class="clay-icon clay-badge clay-calendar-b" aria-hidden="true"><i class="fa-solid fa-calendar-days"></i></div>
+      <div class="clay-icon clay-badge clay-plus-b" aria-hidden="true"><i class="fa-solid fa-plus"></i></div>
+      <div class="clay-icon clay-badge clay-urgency-b" aria-hidden="true"><i class="fa-solid fa-truck-medical"></i></div>
+      <div class="clay-icon clay-badge clay-shield-b" aria-hidden="true"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="clay-icon clay-badge clay-records-b" aria-hidden="true"><i class="fa-solid fa-folder-medical"></i></div>
+      <div class="clay-icon clay-badge clay-emergency-b" aria-hidden="true"><i class="fa-solid fa-bell"></i></div>
+      <div class="clay-icon clay-badge clay-syringe-b" aria-hidden="true"><i class="fa-solid fa-syringe"></i></div>
+      <div class="clay-icon clay-badge clay-micro-b" aria-hidden="true"><i class="fa-solid fa-microscope"></i></div>
+      <div class="clay-icon clay-badge clay-diagnostic-b" aria-hidden="true"><i class="fa-solid fa-clipboard-list"></i></div>
+      <div class="clay-icon clay-badge clay-chart-b" aria-hidden="true"><i class="fa-solid fa-chart-line"></i></div>
+    </div>
+
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="badge reveal-up">
+            <span class="badge-icon"><i class="fa-solid fa-sparkles"></i></span>
+            AI-Powered Healthcare Platform
+          </div>
+          <h1 class="reveal-up" style="transition-delay:0.05s">Smarter Care.<br>Stronger Hospitals.<br><span class="gradient-text">Powered by AI.</span></h1>
+          <p class="reveal-up" style="transition-delay:0.1s">An all-in-one AI healthcare platform that streamlines hospital operations, enhances patient care, and drives better outcomes across every department.</p>
+          <div class="hero-ctas reveal-up" style="transition-delay:0.15s">
+            <button class="btn btn-primary btn-glow" onclick="openDemoModal()">
+              Get Started <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <button class="btn btn-secondary" onclick="showToast('Loading product demo video...', 'info')">
+              <i class="fa-solid fa-play"></i> Watch Video
+            </button>
+          </div>
+          <div class="hero-trust reveal-up" style="transition-delay:0.2s">
+            <div class="trust-item">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span>HIPAA Compliant</span>
+            </div>
+            <div class="trust-divider"></div>
+            <div class="trust-item">
+              <i class="fa-solid fa-lock"></i>
+              <span>Secure &amp; Encrypted</span>
+            </div>
+            <div class="trust-divider"></div>
+            <div class="trust-item">
+              <i class="fa-solid fa-brain"></i>
+              <span>AI-Powered Insights</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="dashboard-wrapper">
+            <div class="dashboard-glow"></div>
+            <div class="dashboard-image-container">
+              <img src="assets/images/premium_dashboard.png" alt="Vaisoverse Hospital Management Dashboard" onerror="this.src='assets/images/dashboard_mockup.png'">
+            </div>
+            <div class="overlay-card card-beds glass-panel">
+              <div class="overlay-card-icon"><i class="fa-solid fa-bed-pulse"></i></div>
+              <div class="overlay-card-text">
+                <span class="card-title">Live Occupancy</span>
+                <span class="card-value">148 / 180</span>
+                <span class="card-subtext"><i class="fa-solid fa-circle-arrow-up"></i> +12% vs last week</span>
+              </div>
+            </div>
+            <div class="overlay-card card-analytics glass-panel">
+              <div class="overlay-card-icon"><i class="fa-solid fa-brain"></i></div>
+              <div class="overlay-card-text">
+                <span class="card-title">AI Diagnostics</span>
+                <span class="card-value">98.4% Acc.</span>
+                <span class="card-subtext"><i class="fa-solid fa-bolt"></i> Real-time checking</span>
+              </div>
+            </div>
+            <div class="overlay-card card-patients glass-panel">
+              <div class="overlay-card-icon"><i class="fa-solid fa-users"></i></div>
+              <div class="overlay-card-text">
+                <span class="card-title">Patients Today</span>
+                <span class="card-value">2,847</span>
+                <span class="card-subtext"><i class="fa-solid fa-arrow-trend-up"></i> +8.3% growth</span>
+              </div>
+            </div>
+            <div class="hero-robot-mascot">
+              <img src="assets/images/robot_avatar.png" alt="Vaisoverse AI Assistant">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll-cue">
+      <div class="scroll-mouse"><span></span></div>
+      Scroll
+    </div>
+  </section>
+
+  <!-- ===== STATS RIBBON ===== -->
+  <section class="stats-ribbon-section">
+    <div class="container">
+      <div class="stats-ribbon reveal-up">
+        <div class="stat-pill">
+          <i class="fa-solid fa-hospital"></i>
+          <div><span class="stat-value">500+</span><span class="stat-label">Hospitals</span></div>
+        </div>
+        <div class="stat-pill">
+          <i class="fa-solid fa-user-doctor"></i>
+          <div><span class="stat-value">50K+</span><span class="stat-label">Doctors</span></div>
+        </div>
+        <div class="stat-pill">
+          <i class="fa-solid fa-users"></i>
+          <div><span class="stat-value">1M+</span><span class="stat-label">Patients</span></div>
+        </div>
+        <div class="stat-pill">
+          <i class="fa-solid fa-calendar-check"></i>
+          <div><span class="stat-value">10M+</span><span class="stat-label">Appointments</span></div>
+        </div>
+        <div class="stat-pill">
+          <i class="fa-solid fa-heart-circle-check"></i>
+          <div><span class="stat-value">99.9%</span><span class="stat-label">Uptime</span></div>
+        </div>
+        <div class="stat-pill">
+          <i class="fa-solid fa-headset"></i>
+          <div><span class="stat-value">24/7</span><span class="stat-label">AI Support</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TRUSTED PARTNERS ===== -->
+  <section class="trusted-section">
+    <div class="container">
+      <p class="trusted-kicker reveal-up">Trusted by Healthcare Leaders</p>
+      <div class="trusted-marquee reveal-up">
+        <div class="trusted-track">
+          <span class="trusted-logo"><i class="fa-solid fa-house-chimney-medical"></i> Apollo Hospitals</span>
+          <span class="trusted-logo"><i class="fa-solid fa-shield-heart"></i> MAX Healthcare</span>
+          <span class="trusted-logo"><i class="fa-solid fa-heart-pulse"></i> Fortis Healthcare</span>
+          <span class="trusted-logo"><i class="fa-solid fa-hospital-user"></i> Narayana Health</span>
+          <span class="trusted-logo"><i class="fa-solid fa-notes-medical"></i> Manipal Hospitals</span>
+          <span class="trusted-logo"><i class="fa-solid fa-kit-medical"></i> Medanta</span>
+          <!-- duplicate set for seamless marquee loop -->
+          <span class="trusted-logo" aria-hidden="true"><i class="fa-solid fa-house-chimney-medical"></i> Apollo Hospitals</span>
+          <span class="trusted-logo" aria-hidden="true"><i class="fa-solid fa-shield-heart"></i> MAX Healthcare</span>
+          <span class="trusted-logo" aria-hidden="true"><i class="fa-solid fa-heart-pulse"></i> Fortis Healthcare</span>
+          <span class="trusted-logo" aria-hidden="true"><i class="fa-solid fa-hospital-user"></i> Narayana Health</span>
+          <span class="trusted-logo" aria-hidden="true"><i class="fa-solid fa-notes-medical"></i> Manipal Hospitals</span>
+          <span class="trusted-logo" aria-hidden="true"><i class="fa-solid fa-kit-medical"></i> Medanta</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== WHY CHOOSE US / HEALTHCARE ECOSYSTEM ===== -->
+  <section class="why-section" id="why-choose-us">
+    <div class="container">
+      <div class="section-header reveal-up">
+        <span class="section-kicker">Why Choose Us</span>
+        <h2>Built for Every Healthcare Ecosystem</h2>
+        <p>One adaptive platform, engineered for the way every corner of modern healthcare actually operates.</p>
+      </div>
+      <div class="ecosystem-grid">
+        <div class="ecosystem-card reveal-up">
+          <div class="ecosystem-icon"><img src="assets/images/1 (1).png" alt="" onerror="this.parentElement.innerHTML='&lt;i class=\'fa-solid fa-hospital\'&gt;&lt;/i&gt;'"></div>
+          <h3>Hospitals</h3>
+          <ul>
+            <li>Streamlined operations</li>
+            <li>Centralized management</li>
+            <li>Real-time analytics</li>
+            <li>Improved patient outcomes</li>
+          </ul>
+        </div>
+        <div class="ecosystem-card reveal-up" style="transition-delay:0.06s">
+          <div class="ecosystem-icon"><img src="assets/images/1 (11).png" alt="" onerror="this.parentElement.innerHTML='&lt;i class=\'fa-solid fa-clinic-medical\'&gt;&lt;/i&gt;'"></div>
+          <h3>Clinics</h3>
+          <ul>
+            <li>Easy patient management</li>
+            <li>Appointment automation</li>
+            <li>Digital records</li>
+            <li>Cost-effective solution</li>
+          </ul>
+        </div>
+        <div class="ecosystem-card reveal-up" style="transition-delay:0.12s">
+          <div class="ecosystem-icon"><img src="assets/images/1 (4).png" alt="" onerror="this.parentElement.innerHTML='&lt;i class=\'fa-solid fa-user-doctor\'&gt;&lt;/i&gt;'"></div>
+          <h3>Doctors</h3>
+          <ul>
+            <li>Smart scheduling</li>
+            <li>Patient history at a glance</li>
+            <li>AI clinical support</li>
+            <li>Better decision making</li>
+          </ul>
+        </div>
+        <div class="ecosystem-card reveal-up" style="transition-delay:0.18s">
+          <div class="ecosystem-icon"><img src="assets/images/1 (5).png" alt="" onerror="this.parentElement.innerHTML='&lt;i class=\'fa-solid fa-people-roof\'&gt;&lt;/i&gt;'"></div>
+          <h3>Patients</h3>
+          <ul>
+            <li>Easy booking</li>
+            <li>Health records in one place</li>
+            <li>Medicine reminders</li>
+            <li>Better care experience</li>
+          </ul>
+        </div>
+        <div class="ecosystem-card reveal-up" style="transition-delay:0.24s">
+          <div class="ecosystem-icon"><img src="assets/images/1 (3).png" alt="" onerror="this.parentElement.innerHTML='&lt;i class=\'fa-solid fa-building-columns\'&gt;&lt;/i&gt;'"></div>
+          <h3>Government</h3>
+          <ul>
+            <li>Healthcare transparency</li>
+            <li>Population health insights</li>
+            <li>Policy planning support</li>
+            <li>Data-driven decisions</li>
+          </ul>
+        </div>
+        <div class="ecosystem-card reveal-up" style="transition-delay:0.3s">
+          <div class="ecosystem-icon"><img src="assets/images/1 (2).png" alt="" onerror="this.parentElement.innerHTML='&lt;i class=\'fa-solid fa-diagram-project\'&gt;&lt;/i&gt;'"></div>
+          <h3>Healthcare Chains</h3>
+          <ul>
+            <li>Multi-location management</li>
+            <li>Standardized workflows</li>
+            <li>Centralized billing</li>
+            <li>Brand consistency</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== AI ASSISTANT SHOWCASE ===== -->
+  <section class="ai-showcase-section">
+    <div class="ai-showcase-bg"></div>
+    <div class="container">
+      <div class="ai-showcase-grid">
+        <div class="ai-showcase-content reveal-up">
+          <span class="section-kicker">AI Healthcare Platform</span>
+          <h2>Meet Your 24/7 AI Health Assistant</h2>
+          <p>From triage to scheduling, Vaisoverse's AI assistant understands clinical context, speaks naturally, and works around the clock so your staff doesn't have to.</p>
+          <ul class="ai-feature-list">
+            <li><i class="fa-solid fa-comment-medical"></i><div><strong>Conversational Intake</strong><span>Understands symptoms and routes patients instantly</span></div></li>
+            <li><i class="fa-solid fa-microphone-lines"></i><div><strong>Voice &amp; Chat</strong><span>Talk or type — Vaisoverse understands both</span></div></li>
+            <li><i class="fa-solid fa-calendar-check"></i><div><strong>Smart Scheduling</strong><span>Books, reschedules, and confirms appointments automatically</span></div></li>
+            <li><i class="fa-solid fa-chart-line"></i><div><strong>Predictive Insights</strong><span>Flags high-risk patients before it becomes urgent</span></div></li>
+          </ul>
+          <button class="btn btn-primary btn-glow" onclick="showToast('Opening the AI Assistant...', 'info'); toggleChat();">
+            <i class="fa-solid fa-robot"></i> Try the AI Assistant
+          </button>
+        </div>
+        <div class="ai-showcase-visual reveal-up" style="transition-delay:0.1s">
+          <div class="ai-mockup glass-panel">
+            <div class="ai-mockup-header">
+              <img src="assets/images/robot_avatar.png" alt="">
+              <div><strong>AI Health Assistant</strong><span>Your smart healthcare companion</span></div>
+            </div>
+            <div class="ai-mockup-body">
+              <div class="ai-mockup-bubble bot">Hello! I'm your AI health assistant. How can I help you today?</div>
+              <div class="ai-mockup-bubble user">Find cardiologists on duty today</div>
+              <div class="ai-mockup-bubble bot typing"><span></span><span></span><span></span></div>
+            </div>
+            <div class="ai-mockup-prompts">
+              <span><i class="fa-solid fa-calendar-days"></i> Book an Appointment</span>
+              <span><i class="fa-solid fa-stethoscope"></i> Check Symptoms</span>
+              <span><i class="fa-solid fa-triangle-exclamation"></i> Emergency Help</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES / PRODUCT MODULES ===== -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <div class="section-header reveal-up">
+        <span class="section-kicker">All-in-One Healthcare Platform</span>
+        <h2>Everything You Need. All in One Platform.</h2>
+        <p>Powerful modules designed for modern healthcare delivery — from front desk to ICU.</p>
+      </div>
+      <div class="modules-grid">
+        <div class="module-card reveal-up"><div class="module-icon mi-1"><i class="fa-solid fa-calendar-days"></i></div><h4>AI Appointments</h4><p>Smart scheduling with AI optimization &amp; reminders</p></div>
+        <div class="module-card reveal-up" style="transition-delay:0.03s"><div class="module-icon mi-2"><i class="fa-solid fa-user-doctor"></i></div><h4>Doctor Management</h4><p>Manage doctors, specialties, availability &amp; schedules</p></div>
+        <div class="module-card reveal-up" style="transition-delay:0.06s"><div class="module-icon mi-3"><i class="fa-solid fa-users"></i></div><h4>Patient Management</h4><p>Comprehensive patient profiles, history &amp; records</p></div>
+        <div class="module-card reveal-up" style="transition-delay:0.09s"><div class="module-icon mi-4"><i class="fa-solid fa-robot"></i></div><h4>AI Chatbot Assistant</h4><p>24/7 AI support for patients and staff</p></div>
+        <div class="module-card reveal-up" style="transition-delay:0.12s"><div class="module-icon mi-5"><i class="fa-solid fa-gauge-high"></i></div><h4>Hospital Dashboard</h4><p>Real-time overview of hospital operations</p></div>
+        <div class="module-card reveal-up" style="transition-delay:0.15s"><div class="module-icon mi-6"><i class="fa-solid fa-flask"></i></div><h4>Laboratory</h4><p>Smart lab management &amp; test tracking</p></div>
+        <div class="module-card reveal-up" style="transition-delay:0.18s"><div class="module-icon mi-7"><i class="fa-solid fa-lungs"></i></div><h4>Radiology</h4><p>Imaging, reports &amp; AI analysis support</p></div>
+        <div class="module-card reveal-up" style="transition-delay:0.21s"><div class="module-icon mi-8"><i class="fa-solid fa-folder-medical"></i></div><h4>EHR System</h4><p>Electronic health records made simple</p></div>
+        <div class="module-card reveal-up" style="transition-delay:0.24s"><div class="module-icon mi-9"><i class="fa-solid fa-location-dot"></i></div><h4>Patient Tracking</h4><p>Real-time patient tracking &amp; location</p></div>
+        <div class="module-card reveal-up" style="transition-delay:0.27s"><div class="module-icon mi-10"><i class="fa-solid fa-truck-medical"></i></div><h4>Emergency Management</h4><p>Emergency alerts, triage &amp; quick response</p></div>
+        <div class="module-card reveal-up" style="transition-delay:0.3s"><div class="module-icon mi-11"><i class="fa-solid fa-bed-pulse"></i></div><h4>Bed Management</h4><p>Real-time bed availability &amp; allocation</p></div>
+        <div class="module-card reveal-up" style="transition-delay:0.33s"><div class="module-icon mi-12"><i class="fa-solid fa-boxes-stacked"></i></div><h4>Inventory Management</h4><p>Medicine, supplies &amp; stock management</p></div>
+        <div class="module-card reveal-up" style="transition-delay:0.36s"><div class="module-icon mi-13"><i class="fa-solid fa-file-invoice-dollar"></i></div><h4>Billing &amp; Invoicing</h4><p>Smart billing, insurance &amp; invoicing</p></div>
+        <div class="module-card reveal-up" style="transition-delay:0.39s"><div class="module-icon mi-14"><i class="fa-solid fa-chart-column"></i></div><h4>Analytics &amp; Reports</h4><p>Advanced analytics &amp; custom reports</p></div>
+        <div class="module-card reveal-up" style="transition-delay:0.42s"><div class="module-icon mi-15"><i class="fa-solid fa-brain"></i></div><h4>AI Predictions</h4><p>Predict outcomes &amp; improve clinical decisions</p></div>
+      </div>
+      <div class="modules-cta reveal-up">
+        <button class="btn btn-primary" onclick="document.getElementById('why-choose-us').scrollIntoView({behavior:'smooth'})">Explore All Features <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DEPARTMENT SOLUTIONS ===== -->
+  <section class="departments-section" id="departments">
+    <div class="container">
+      <div class="section-header reveal-up">
+        <span class="section-kicker">Department Solutions</span>
+        <h2>Tailored for Every Department</h2>
+        <p>Every wing of your hospital runs smoother with customized predictive dashboards.</p>
+      </div>
+      <div class="features-grid departments-grid">
+        <div class="feature-card dept-card reveal-up">
+          <div class="feature-icon-wrapper dept-icon-cardo">
+            <i class="fa-solid fa-heart-pulse"></i>
+          </div>
+          <h3>Cardiology Wing</h3>
+          <p>Telemetry data processing filters patient metrics, offering continuous arrhythmia surveillance alerts to nursing stations.</p>
+          <div class="dept-stats">
+            <span><i class="fa-solid fa-bed"></i> 42 Beds</span>
+            <span><i class="fa-solid fa-user-doctor"></i> 8 Specialists</span>
+          </div>
+        </div>
+        <div class="feature-card dept-card reveal-up" style="transition-delay: 0.08s;">
+          <div class="feature-icon-wrapper dept-icon-neuro">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <h3>Neurology Center</h3>
+          <p>High-resolution imaging datasets auto-segment cerebral metrics, assisting surgeons in structural diagnostics.</p>
+          <div class="dept-stats">
+            <span><i class="fa-solid fa-bed"></i> 28 Beds</span>
+            <span><i class="fa-solid fa-user-doctor"></i> 6 Specialists</span>
+          </div>
+        </div>
+        <div class="feature-card dept-card reveal-up" style="transition-delay: 0.16s;">
+          <div class="feature-icon-wrapper dept-icon-er">
+            <i class="fa-solid fa-kit-medical"></i>
+          </div>
+          <h3>Emergency ER</h3>
+          <p>Triage wait times are halved by routing ambulances dynamically according to real-time specialty care availability.</p>
+          <div class="dept-stats">
+            <span><i class="fa-solid fa-bed"></i> 56 Beds</span>
+            <span><i class="fa-solid fa-user-doctor"></i> 12 Specialists</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRODUCT SHOWCASE ===== -->
+  <section class="showcase-section">
+    <div class="container">
+      <div class="section-header reveal-up">
+        <span class="section-kicker">Product Showcase</span>
+        <h2>One Platform. Infinite Possibilities.</h2>
+        <p>Powerful dashboards for every role in your healthcare ecosystem.</p>
+      </div>
+      <div class="device-showcase reveal-up">
+        <div class="device device-laptop device-laptop-back">
+          <div class="device-screen">
+            <div class="mock-topbar"><span></span><span></span><span></span></div>
+            <div class="mock-row">
+              <div class="mock-card"><span class="mock-label">Total Patients</span><span class="mock-num">12,458</span></div>
+              <div class="mock-card"><span class="mock-label">Revenue</span><span class="mock-num">$124.5K</span></div>
+            </div>
+            <div class="mock-chart">
+              <svg viewBox="0 0 200 60" preserveAspectRatio="none"><polyline points="0,45 30,30 60,38 90,15 120,25 150,10 180,20 200,8" fill="none" stroke="#7C3AED" stroke-width="2.5"/></svg>
+            </div>
+            <div class="mock-donut"></div>
+          </div>
+          <span class="device-caption">AI Dashboard</span>
+        </div>
+        <div class="device device-laptop device-laptop-front">
+          <div class="device-screen">
+            <div class="mock-topbar"><span></span><span></span><span></span></div>
+            <div class="mock-greeting">Good Morning, Dr. Smith</div>
+            <div class="mock-row">
+              <div class="mock-card wide"><span class="mock-label">Today's Appointments</span><span class="mock-num">18</span></div>
+            </div>
+            <div class="mock-list">
+              <div class="mock-list-item"><span class="dot green"></span> Alex Johnson — 9:30 AM</div>
+              <div class="mock-list-item"><span class="dot amber"></span> Priya Nair — 10:15 AM</div>
+              <div class="mock-list-item"><span class="dot blue"></span> Marcus Lee — 11:00 AM</div>
+            </div>
+          </div>
+          <span class="device-caption">Doctor Dashboard</span>
+        </div>
+        <div class="device device-phone">
+          <div class="device-screen">
+            <div class="mock-phone-header">Health Summary</div>
+            <div class="mock-vitals">
+              <div><strong>120/80</strong><span>BP</span></div>
+              <div><strong>98.6°F</strong><span>Temp</span></div>
+              <div><strong>72bpm</strong><span>Pulse</span></div>
+            </div>
+            <div class="mock-card wide"><span class="mock-label">Next Appointment</span><span class="mock-num" style="font-size:13px;">Tomorrow, 10 AM</span></div>
+          </div>
+          <span class="device-caption">Patient App</span>
+        </div>
+      </div>
+      <div class="showcase-features reveal-up">
+        <span><i class="fa-solid fa-robot"></i> AI Assistant</span>
+        <span><i class="fa-solid fa-microphone"></i> Voice &amp; Chat</span>
+        <span><i class="fa-solid fa-wand-magic-sparkles"></i> Smart Automation</span>
+        <span><i class="fa-solid fa-bell"></i> Real-time Alerts</span>
+        <span><i class="fa-solid fa-plug"></i> Integrated Systems</span>
+        <span><i class="fa-solid fa-shield-halved"></i> Secure &amp; Compliant</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRICING PREVIEW ===== -->
+  <section class="pricing-section" id="pricing">
+    <div class="pricing-bg-shape"></div>
+    <div class="container">
+      <div class="section-header reveal-up">
+        <span class="section-kicker">Simple. Transparent. Powerful.</span>
+        <h2>Pricing Plans for Every Healthcare Need</h2>
+        <p>Choose the tier that fits your clinical network. Save 20% on annual billing cycles.</p>
+        <div class="billing-toggle-container">
+          <span class="toggle-label active" id="billing-monthly">Monthly</span>
+          <label class="switch-toggle billing-switch">
+            <input type="checkbox" id="billing-cycle-toggle" onchange="toggleBillingCycle(this.checked)">
+            <span class="slider-round"></span>
+          </label>
+          <span class="toggle-label" id="billing-yearly">Annually <span class="discount-badge">Save 20%</span></span>
+        </div>
+      </div>
+      <div class="pricing-grid">
+        <div class="pricing-card glass-panel reveal-up">
+          <div class="pricing-card-bg"></div>
+          <div class="pricing-header">
+            <div class="plan-icon-wrapper silver">
+              <i class="fa-solid fa-seedling"></i>
+            </div>
+            <h3>Silver Plan</h3>
+            <p>Ideal for private practices and small clinics.</p>
+          </div>
+          <div class="pricing-price">
+            <span class="currency">₹</span>
+            <span class="price-val" id="price-silver">14,999</span>
+            <span class="duration">/mo</span>
+          </div>
+          <ul class="pricing-features">
+            <li><i class="fa-solid fa-circle-check"></i> Up to 5 Doctor Profiles</li>
+            <li><i class="fa-solid fa-circle-check"></i> Smart Appointment Scheduling</li>
+            <li><i class="fa-solid fa-circle-check"></i> HIPAA Cryptographic Reports</li>
+            <li class="disabled"><i class="fa-solid fa-circle-xmark"></i> Live Bed Occupancy Tracking</li>
+            <li class="disabled"><i class="fa-solid fa-circle-xmark"></i> AI Clinical Diagnostics (98.4%)</li>
+            <li class="disabled"><i class="fa-solid fa-circle-xmark"></i> Custom AI Co-pilot Integrations</li>
+          </ul>
+          <button class="btn btn-secondary pricing-btn" onclick="openSubscriptionModal('Silver', 14999)">Choose Silver</button>
+        </div>
+        <div class="pricing-card glass-panel popular reveal-up" style="transition-delay: 0.08s;">
+          <div class="pricing-card-bg"></div>
+          <div class="popular-badge">Most Popular</div>
+          <div class="pricing-header">
+            <div class="plan-icon-wrapper gold">
+              <i class="fa-solid fa-crown"></i>
+            </div>
+            <h3>Gold Plan</h3>
+            <p>Perfect for mid-sized hospitals and emergency wings.</p>
+          </div>
+          <div class="pricing-price">
+            <span class="currency">₹</span>
+            <span class="price-val" id="price-gold">39,999</span>
+            <span class="duration">/mo</span>
+          </div>
+          <ul class="pricing-features">
+            <li><i class="fa-solid fa-circle-check"></i> Unlimited Doctor Profiles</li>
+            <li><i class="fa-solid fa-circle-check"></i> Smart Appointment Scheduling</li>
+            <li><i class="fa-solid fa-circle-check"></i> HIPAA Cryptographic Reports</li>
+            <li><i class="fa-solid fa-circle-check"></i> Live Bed Occupancy Tracking</li>
+            <li><i class="fa-solid fa-circle-check"></i> AI Clinical Diagnostics (98.4%)</li>
+            <li class="disabled"><i class="fa-solid fa-circle-xmark"></i> Dedicated Secure LLM Node</li>
+          </ul>
+          <button class="btn btn-primary pricing-btn" onclick="openSubscriptionModal('Gold', 39999)">Choose Gold</button>
+        </div>
+        <div class="pricing-card glass-panel reveal-up" style="transition-delay: 0.16s;">
+          <div class="pricing-card-bg"></div>
+          <div class="pricing-header">
+            <div class="plan-icon-wrapper platinum">
+              <i class="fa-solid fa-gem"></i>
+            </div>
+            <h3>Platinum Plan</h3>
+            <p>For large enterprise medical networks and research wings.</p>
+          </div>
+          <div class="pricing-price">
+            <span class="currency">₹</span>
+            <span class="price-val" id="price-platinum">79,999</span>
+            <span class="duration">/mo</span>
+          </div>
+          <ul class="pricing-features">
+            <li><i class="fa-solid fa-circle-check"></i> Full Multi-Site Sync Network</li>
+            <li><i class="fa-solid fa-circle-check"></i> Smart Appointment Scheduling</li>
+            <li><i class="fa-solid fa-circle-check"></i> HIPAA Cryptographic Reports</li>
+            <li><i class="fa-solid fa-circle-check"></i> Live Bed Occupancy Tracking</li>
+            <li><i class="fa-solid fa-circle-check"></i> AI Clinical Diagnostics (98.4%)</li>
+            <li><i class="fa-solid fa-circle-check"></i> Dedicated Secure LLM Node</li>
+          </ul>
+          <button class="btn btn-secondary pricing-btn" onclick="openSubscriptionModal('Platinum', 79999)">Choose Platinum</button>
+        </div>
+      </div>
+      <p class="pricing-footnote reveal-up"><i class="fa-solid fa-shield"></i> No Setup Fees &nbsp;•&nbsp; <i class="fa-solid fa-lock"></i> Enterprise Security &nbsp;•&nbsp; <i class="fa-solid fa-rotate"></i> Cancel Anytime</p>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="testimonials-section" id="testimonials">
+    <div class="container">
+      <div class="section-header reveal-up">
+        <span class="section-kicker">Client Stories</span>
+        <h2>What Healthcare Leaders Say</h2>
+        <p>Hear from hospitals and clinics that have transformed their operations with Vaisoverse.</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card reveal-up">
+          <div class="testimonial-stars">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-text">"Vaisoverse has completely transformed our hospital's operations. The AI diagnostics module alone reduced our reporting time by 60%. The bed tracking feature is a game-changer for our ER."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <div>
+              <strong>Dr. Sarah Mitchell</strong>
+              <span>Chief of Medicine, St. Mary's Hospital</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal-up" style="transition-delay:0.1s">
+          <div class="testimonial-stars">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-text">"The smart scheduling feature has eliminated our staffing conflicts entirely. Our doctors love the intuitive interface, and our patients appreciate the seamless booking experience."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <div>
+              <strong>James Rodriguez</strong>
+              <span>CEO, Pacific Health Network</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal-up" style="transition-delay:0.2s">
+          <div class="testimonial-stars">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-text">"Implementing Vaisoverse was the best decision we made this year. The HIPAA compliance gave us peace of mind, and the ROI was visible within the first quarter of deployment."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <i class="fa-solid fa-user-md"></i>
+            </div>
+            <div>
+              <strong>Dr. Emily Chen</strong>
+              <span>Medical Director, Aurora Clinics</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="contact-section" id="contact">
+    <div class="container">
+      <div class="section-header reveal-up">
+        <span class="section-kicker">Get In Touch</span>
+        <h2>Let's Transform Your Healthcare</h2>
+        <p>Ready to see Vaisoverse in action? Reach out to our team for a personalized demo.</p>
+      </div>
+      <div class="contact-wrapper reveal-up">
+        <div class="contact-info">
+          <div class="contact-info-item">
+            <div class="contact-icon-wrap">
+              <i class="fa-solid fa-envelope"></i>
+            </div>
+            <div>
+              <h4>Email Us</h4>
+              <p>info@vaisoverse.com</p>
+              <p>support@vaisoverse.com</p>
+            </div>
+          </div>
+          <div class="contact-info-item">
+            <div class="contact-icon-wrap">
+              <i class="fa-solid fa-phone"></i>
+            </div>
+            <div>
+              <h4>Call Us</h4>
+              <p>+1 (800) 555-VAIS</p>
+              <p>+1 (555) 123-4567</p>
+            </div>
+          </div>
+          <div class="contact-info-item">
+            <div class="contact-icon-wrap">
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <div>
+              <h4>Visit Us</h4>
+              <p>742 Innovation Drive, Suite 200</p>
+              <p>San Francisco, CA 94105</p>
+            </div>
+          </div>
+          <div class="contact-social">
+            <a href="#" class="social-btn"><i class="fa-brands fa-twitter"></i></a>
+            <a href="#" class="social-btn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" class="social-btn"><i class="fa-brands fa-github"></i></a>
+            <a href="#" class="social-btn"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+        <form class="contact-form" onsubmit="event.preventDefault(); showToast('Thank you! We will get back to you shortly.', 'success'); this.reset();">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="contact-name">Full Name</label>
+              <input type="text" id="contact-name" class="form-input" placeholder="Dr. Sarah Carter" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="contact-email">Hospital Email</label>
+              <input type="email" id="contact-email" class="form-input" placeholder="sarah@hospital.org" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="contact-subject">Subject</label>
+            <input type="text" id="contact-subject" class="form-input" placeholder="How can we help?" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="contact-message">Message</label>
+            <textarea id="contact-message" class="form-input" rows="4" placeholder="Tell us about your hospital's needs..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-glow contact-submit">
+            <i class="fa-solid fa-paper-plane"></i> Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA BANNER ===== -->
+  <section class="cta-banner-section">
+    <div class="container">
+      <div class="cta-banner reveal-up">
+        <div class="cta-banner-dots"></div>
+        <div class="cta-banner-text">
+          <span class="cta-kicker"><i class="fa-solid fa-bolt"></i> Start Today</span>
+          <h2>Ready to Transform Your Healthcare?</h2>
+          <p>Join hundreds of healthcare organizations already using AI to deliver better care.</p>
+          <div class="cta-banner-actions">
+            <button class="btn btn-white" onclick="openDemoModal()">Get Started Today <i class="fa-solid fa-arrow-right"></i></button>
+            <button class="btn btn-outline-white" onclick="openDemoModal()">Book a Demo</button>
+          </div>
+          <div class="cta-trust-row">
+            <div class="cta-avatar-stack">
+              <span><i class="fa-solid fa-user-doctor"></i></span>
+              <span><i class="fa-solid fa-user-nurse"></i></span>
+              <span><i class="fa-solid fa-user-tie"></i></span>
+              <span><i class="fa-solid fa-user-md"></i></span>
+            </div>
+            <span>Trusted by 500+ healthcare organizations</span>
+          </div>
+        </div>
+        <div class="cta-banner-visual">
+          <div class="cta-pulse-ring r1"></div>
+          <div class="cta-pulse-ring r2"></div>
+          <div class="cta-visual-frame">
+            <img src="assets/images/1 (7).png" alt="Vaisoverse Hospital" onerror="this.style.display='none'">
+          </div>
+          <div class="cta-float-chip chip-top"><i class="fa-solid fa-hospital"></i> 500+ Hospitals</div>
+          <div class="cta-float-chip chip-bottom"><i class="fa-solid fa-shield-halved"></i> HIPAA Compliant</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CHATBOT WIDGET ===== -->
+  <div class="chatbot-widget" id="chatbot-widget">
+    <div class="chat-container glass-panel" id="chat-container">
+      <div class="chat-header">
+        <div class="chat-header-profile">
+          <div class="chat-avatar-container">
+            <img src="assets/images/robot_avatar.png" alt="Vaisoverse Robot Face">
+            <span class="status-dot"></span>
+          </div>
+          <div class="chat-header-info">
+            <h4>Vaisoverse AI</h4>
+            <span><i class="fa-solid fa-circle"></i> Operations Assistant</span>
+          </div>
+        </div>
+        <div class="chat-header-actions">
+          <button class="chat-header-btn" onclick="clearChat()" title="Reset chat history">
+            <i class="fa-solid fa-rotate-left"></i>
+          </button>
+        </div>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-bubble-wrapper bot">
+          <div class="msg-avatar">
+            <img src="assets/images/robot_avatar.png" alt="Bot Avatar">
+          </div>
+          <div>
+            <div class="chat-bubble">
+              Welcome to Vaisoverse AI. How can I assist you?
+            </div>
+            <span class="msg-time">Just now</span>
+          </div>
+        </div>
+      </div>
+      <div class="chat-quick-actions" id="quick-actions">
+        <button class="action-pill" onclick="handlePillClick('Book Appointment')"><i class="fa-solid fa-calendar-check"></i> Book Appointment</button>
+        <button class="action-pill" onclick="handlePillClick('Check Lab Reports')"><i class="fa-solid fa-flask"></i> Check Lab Reports</button>
+        <button class="action-pill" onclick="handlePillClick('Emergency Help')"><i class="fa-solid fa-truck-medical"></i> Emergency Help</button>
+        <button class="action-pill" onclick="handlePillClick('Doctor Search')"><i class="fa-solid fa-user-doctor"></i> Doctor Search</button>
+      </div>
+      <div class="chat-input-bar">
+        <div class="chat-input-actions">
+          <button class="input-action-btn" onclick="triggerFileUpload()" title="Upload medical documents">
+            <i class="fa-solid fa-paperclip"></i>
+          </button>
+          <button class="input-action-btn" id="voice-btn" onclick="toggleVoiceMockup()" title="Voice input">
+            <i class="fa-solid fa-microphone"></i>
+          </button>
+        </div>
+        <div class="chat-input-wrapper">
+          <input type="text" class="chat-input-field" id="chat-input" placeholder="Type a message..." onkeypress="handleInputKeypress(event)">
+        </div>
+        <button class="chat-send-btn" onclick="sendUserMessage()">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+    <button class="chatbot-fab" id="chatbot-fab" onclick="toggleChat()">
+      <span class="fab-pulse-ring"></span>
+      <div class="fab-badge" id="fab-badge">1</div>
+      <img src="assets/images/robot_avatar.png" alt="Robot FAB Face" class="robot-icon">
+      <i class="fa-solid fa-xmark close-icon"></i>
+    </button>
+  </div>
+
+  <!-- ===== BOOK DEMO MODAL ===== -->
+  <div class="modal-overlay" id="demo-modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeDemoModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-header">
+        <h3>Schedule Vaisoverse Demo</h3>
+        <p>Complete the details below to receive a personalized dashboard preview for your hospital staff.</p>
+      </div>
+          <form onsubmit="submitDemoForm(event)">
+        <div class="form-group">
+          <label class="form-label" for="demo-name">Full Name</label>
+          <input type="text" id="demo-name" class="form-input" placeholder="Dr. Sarah Carter" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="demo-email">Hospital Email</label>
+          <input type="email" id="demo-email" class="form-input" placeholder="sarah.carter@hospital.org" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="demo-size">Hospital Size (Beds)</label>
+          <input type="number" id="demo-size" class="form-input" placeholder="250" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-glow" style="width:100%;margin-top:10px;">Request Operations Demo</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== SUBSCRIPTION MODAL ===== -->
+  <div class="modal-overlay" id="subscription-modal">
+    <div class="modal-content subscription-modal-content">
+      <button class="modal-close" onclick="closeSubscriptionModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-header">
+        <h3>Subscribe to Vaisoverse AI</h3>
+        <p>Complete the details below to activate your hospital's operational subscription.</p>
+      </div>
+      <div class="subscription-summary-box">
+        <div>
+          <span class="summary-plan-name" id="summary-plan">Gold Plan</span>
+          <span class="summary-billing-cycle" id="summary-cycle">Billed Monthly</span>
+        </div>
+        <span class="summary-plan-price" id="summary-price">$499/mo</span>
+      </div>
+      <form onsubmit="submitSubscriptionForm(event)">
+        <div class="form-group">
+          <label class="form-label" for="sub-hospital">Hospital / Practice Name</label>
+          <input type="text" id="sub-hospital" class="form-input" placeholder="St. Mary Mercy Hospital" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="sub-email">Billing Contact Email</label>
+          <input type="email" id="sub-email" class="form-input" placeholder="billing@stmarymercy.org" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="sub-card">Credit Card Number</label>
+          <div class="payment-card-input-wrapper">
+            <i class="fa-regular fa-credit-card credit-card-icon"></i>
+            <input type="text" id="sub-card" class="form-input card-number-input" placeholder="4111 2222 3333 4444" minlength="19" maxlength="19" oninput="formatCardNumber(this)" required>
+          </div>
+        </div>
+        <div class="form-grid-2col" style="margin-top:10px;">
+          <div class="form-group">
+            <label class="form-label" for="sub-expiry">Expiry Date</label>
+            <input type="text" id="sub-expiry" class="form-input" placeholder="MM/YY" maxlength="5" oninput="formatCardExpiry(this)" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="sub-cvv">CVV Code</label>
+            <input type="password" id="sub-cvv" class="form-input" placeholder="123" maxlength="3" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-glow" style="width:100%;margin-top:15px;">
+          <i class="fa-solid fa-shield-halved"></i> Authorize &amp; Activate Plan
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Hidden File Input for Chatbot -->
+  <input type="file" id="chat-file-input" style="display: none;" onchange="handleFileSelected(event)">
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-col footer-brand">
+            <a href="#" class="logo">
+              <img src="assets/images/Logo.png" alt="Vaisoverse" class="logo-img">
+              <span class="logo-text">Vaiso</span><span class="logo-highlight">verse</span>
+            </a>
+            <p>Unifying modern medical diagnostics with intelligent clinical workflows. Elevate hospital automation safely under strict HIPAA compliance.</p>
+            <div class="social-links">
+              <a href="#" class="social-btn"><i class="fa-brands fa-twitter"></i></a>
+              <a href="#" class="social-btn"><i class="fa-brands fa-linkedin-in"></i></a>
+              <a href="#" class="social-btn"><i class="fa-brands fa-github"></i></a>
+              <a href="#" class="social-btn"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+          </div>
+          <div class="footer-col">
+            <h4>Platform</h4>
+            <ul>
+              <li><a href="#features">Smart Scheduling</a></li>
+              <li><a href="#features">Bed Occupancy</a></li>
+              <li><a href="#features">Clinical Models</a></li>
+              <li><a href="#features">API Integration</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Security</h4>
+            <ul>
+              <li><a href="#">HIPAA Compliance</a></li>
+              <li><a href="#">SOC 2 Audits</a></li>
+              <li><a href="#">Data Encryption</a></li>
+              <li><a href="#">Access Controls</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Contact</h4>
+            <ul>
+              <li><a href="#">Support Center</a></li>
+              <li><a href="#">Developer Portal</a></li>
+              <li><a href="#">Sales Inquiry</a></li>
+              <li><a href="mailto:info@vaisoverse.com">info@vaisoverse.com</a></li>
+            </ul>
+          </div>
+          <div class="footer-col footer-newsletter">
+            <h4>Stay Updated</h4>
+            <p>Get the latest from Vaisoverse.</p>
+            <div class="newsletter-form">
+              <input type="email" placeholder="Your email" class="newsletter-input">
+              <button class="newsletter-btn"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 Vaisoverse AI Inc. All rights reserved. Registered medical SaaS system.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Firebase recaptcha container -->
+  <div id="recaptcha-container"></div>
+
+  <!-- Firebase App & Auth SDKs (Compat versions for simple integration) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <script src="ui-effects.js"></script>
+</body>
+</html>

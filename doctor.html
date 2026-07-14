@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vaisoverse | Doctor Operations Dashboard</title>
+  <meta name="description" content="Manage availability, view scheduled appointments, and interface with the AI Co-pilot on the Vaisoverse Clinician Dashboard.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+
+  <div id="toast-container" class="toast-container">
+    <div class="toast">
+      <i class="fa-solid fa-circle-check toast-icon"></i>
+      <span id="toast-message">Notification Message</span>
+    </div>
+  </div>
+
+  <!-- ===== DASHBOARD HEADER ===== -->
+  <header id="main-header" class="scrolled dash-header">
+    <div class="container">
+      <div class="nav-wrapper">
+        <a href="index.html" class="logo">
+          <img src="assets/images/Logo.png" alt="Vaisoverse" class="logo-img">
+          <span class="logo-text">Vaiso</span><span class="logo-highlight">verse</span>
+          <span class="badge-role">Staff</span>
+        </a>
+        <div class="header-actions">
+          <a href="index.html" class="btn btn-ghost doctor-link">
+            <i class="fa-solid fa-arrow-left"></i> Patient Portal
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MAIN DASHBOARD ===== -->
+  <main class="dashboard-container">
+    <div class="container">
+      <div class="dashboard-grid">
+
+        <!-- ===== LEFT SIDEBAR ===== -->
+        <aside class="dashboard-sidebar glass-panel">
+          <div class="doctor-switcher-container">
+            <label class="form-label" for="active-doctor-select">Select Doctor Profile</label>
+            <div class="select-wrapper">
+              <select id="active-doctor-select" class="form-input select-styled" onchange="handleDoctorSwitch(this.value)">
+                <option value="dr-mercer">Dr. Alan Mercer (Cardiology)</option>
+                <option value="dr-reynolds">Dr. Julia Reynolds (Neurology)</option>
+                <option value="dr-carter">Dr. Sarah Carter (Emergency)</option>
+              </select>
+              <i class="fa-solid fa-chevron-down select-chevron"></i>
+            </div>
+          </div>
+
+          <div class="doctor-snapshot-card" id="doctor-snapshot">
+            <div class="snapshot-avatar" id="snapshot-avatar">
+              <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <div class="snapshot-info">
+              <h3 id="snapshot-name">Dr. Alan Mercer</h3>
+              <p id="snapshot-specialty">Cardiology Wing</p>
+              <div class="status-indicator-badge active" id="snapshot-status-badge">
+                <span class="badge-dot"></span> <span id="snapshot-status-text">Available</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sidebar decorative accent -->
+          <div class="sidebar-decor">
+            <i class="fa-solid fa-shield-heart sidebar-decor-icon"></i>
+          </div>
+
+          <nav class="sidebar-nav">
+            <button class="nav-tab-btn active" data-tab="overview" onclick="switchTab('overview')">
+              <i class="fa-solid fa-chart-line"></i> Overview
+            </button>
+            <button class="nav-tab-btn" data-tab="schedule" onclick="switchTab('schedule')">
+              <i class="fa-solid fa-calendar-days"></i> Availability & Slots
+            </button>
+            <button class="nav-tab-btn" data-tab="profile" onclick="switchTab('profile')">
+              <i class="fa-solid fa-user-gear"></i> Edit Profile
+            </button>
+          </nav>
+        </aside>
+
+        <!-- ===== MAIN CONTENT ===== -->
+        <section class="dashboard-content-area">
+
+          <!-- TAB: Overview -->
+          <div class="dashboard-tab-content active" id="tab-overview">
+            <div class="tab-header">
+              <h2>Operations Overview</h2>
+              <p>Monitor patients registered for consultation under your shift.</p>
+            </div>
+
+            <div class="stats-ribbon-grid">
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper purple">
+                  <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <div class="stat-data">
+                  <span class="stat-label">Total Appointments</span>
+                  <span class="stat-value" id="stat-total-apts">0</span>
+                </div>
+              </div>
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper green">
+                  <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="stat-data">
+                  <span class="stat-label">Available Slots</span>
+                  <span class="stat-value" id="stat-active-slots">0</span>
+                </div>
+              </div>
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper blue">
+                  <i class="fa-solid fa-circle-info"></i>
+                </div>
+                <div class="stat-data">
+                  <span class="stat-label">Duty Status</span>
+                  <span class="stat-value" id="stat-duty-status">Active</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="appointments-table-container glass-panel">
+              <div class="table-header">
+                <h3><i class="fa-solid fa-list-check"></i> Scheduled Appointments</h3>
+                <span class="table-subtitle" id="table-subtitle-count">Showing 0 appointments</span>
+              </div>
+              <div class="table-responsive">
+                <table class="dashboard-table">
+                  <thead>
+                    <tr>
+                      <th>Patient Name</th>
+                      <th>Time Slot</th>
+                      <th>Reason</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="appointments-tbody">
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="uploaded-files-container glass-panel" style="margin-top:24px;">
+                <div class="table-header">
+                  <h3><i class="fa-solid fa-file-medical"></i> Clinical Files</h3>
+                  <span class="table-subtitle">HIPAA Secure</span>
+                </div>
+                <div class="clinical-files-list" id="clinical-files-container">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: Schedule & Slots -->
+          <div class="dashboard-tab-content" id="tab-schedule">
+            <div class="tab-header">
+              <h2>Schedule & Availability Manager</h2>
+              <p>Configure your work hours, toggle booking capability, and manage appointment slots.</p>
+            </div>
+
+            <div class="schedule-settings-grid">
+              <div class="settings-card glass-panel">
+                <h3>Availability Control</h3>
+                <p class="settings-desc">When disabled, patients cannot book appointments with you through Vaisoverse.</p>
+                <div class="toggle-control-wrapper">
+                  <div class="availability-status-banner" id="status-banner">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <div>
+                      <strong id="banner-title">Accepting Appointments</strong>
+                      <p id="banner-desc">You are visible in the booking chatbot.</p>
+                    </div>
+                  </div>
+                  <label class="switch-toggle">
+                    <input type="checkbox" id="availability-toggle" onchange="toggleAvailability(this.checked)">
+                    <span class="slider-round"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="settings-card glass-panel">
+                <h3>Manage Time Slots</h3>
+                <p class="settings-desc">Add or remove specific clock slots that patients can select from.</p>
+                <div class="slots-actions-bar">
+                  <div class="time-picker-wrapper">
+                    <input type="time" id="new-slot-time" class="form-input" value="09:00">
+                  </div>
+                  <button class="btn btn-primary" onclick="addNewSlot()" style="padding:10px 20px;font-size:13px;">
+                    <i class="fa-solid fa-plus"></i> Add Slot
+                  </button>
+                </div>
+                <div class="slots-list-header">
+                  <strong>Active Time Slots</strong>
+                  <span id="slots-count-badge">0 slots available</span>
+                </div>
+                <div class="slots-pill-grid" id="slots-container">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: Edit Profile -->
+          <div class="dashboard-tab-content" id="tab-profile">
+            <div class="tab-header">
+              <h2>Edit Profile Information</h2>
+              <p>Update your credentials, clinical bio, and shift details.</p>
+            </div>
+            <div class="profile-edit-container glass-panel">
+              <form id="profile-edit-form" onsubmit="handleProfileSubmit(event)">
+                <div class="form-grid-2col">
+                  <div class="form-group">
+                    <label class="form-label" for="edit-name">Full Name</label>
+                    <input type="text" id="edit-name" class="form-input" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="edit-specialty">Specialty</label>
+                    <input type="text" id="edit-specialty" class="form-input" required>
+                  </div>
+                </div>
+                <div class="form-grid-2col">
+                  <div class="form-group">
+                    <label class="form-label" for="edit-hours">Shift Hours</label>
+                    <input type="text" id="edit-hours" class="form-input" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="edit-avatar">Profile Icon</label>
+                    <div class="select-wrapper">
+                      <select id="edit-avatar" class="form-input">
+                        <option value="fa-solid fa-user-doctor">Stethoscope & Coat</option>
+                        <option value="fa-solid fa-user-md">Medical Surgeon</option>
+                        <option value="fa-solid fa-stethoscope">Standard Stethoscope</option>
+                        <option value="fa-solid fa-heart-pulse">Cardio Heart</option>
+                      </select>
+                      <i class="fa-solid fa-chevron-down select-chevron"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="edit-bio">Clinical Bio</label>
+                  <textarea id="edit-bio" class="form-input" rows="4" style="resize:vertical;" required></textarea>
+                </div>
+                <div class="profile-actions-bar">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-save"></i> Save Changes
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="resetProfileForm()">
+                    Reset
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ===== RIGHT SIDEBAR: AI CO-PILOT ===== -->
+        <aside class="dashboard-copilot glass-panel">
+          <div class="copilot-header">
+            <div class="copilot-header-left">
+              <div class="copilot-avatar">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <div class="copilot-title">
+                <h4>Clinician Co-pilot</h4>
+                <span>Voice & Text Scheduler</span>
+              </div>
+            </div>
+            <button class="chat-header-btn" onclick="clearCopilotChat()" title="Reset chat">
+              <i class="fa-solid fa-rotate-left"></i>
+            </button>
+          </div>
+
+          <div class="copilot-messages" id="copilot-messages">
+            <div class="copilot-bubble-wrapper bot">
+              <div class="copilot-avatar-msg">🤖</div>
+              <div>
+                <div class="copilot-bubble">
+                  Hello doctor. I am your operations co-pilot.
+                  <br><br>
+                  <em>Try saying:</em>
+                  <ul>
+                    <li>"What is my schedule?"</li>
+                    <li>"Set me as unavailable"</li>
+                    <li>"Add slot for 04:30 PM"</li>
+                    <li>"Cancel Robert's appointment"</li>
+                  </ul>
+                </div>
+                <span class="msg-time">Just now</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="copilot-quick-commands">
+            <button class="copilot-pill" onclick="sendCopilotCommand('Show my schedule')"><i class="fa-solid fa-list-check"></i> Show Schedule</button>
+            <button class="copilot-pill" onclick="sendCopilotCommand('Go on duty')"><i class="fa-solid fa-circle-check"></i> Go on Duty</button>
+            <button class="copilot-pill" onclick="sendCopilotCommand('Go off duty')"><i class="fa-solid fa-ban"></i> Go off Duty</button>
+          </div>
+
+          <div class="copilot-input-bar">
+            <button class="input-action-btn" id="copilot-voice-btn" onclick="toggleCopilotVoice()" title="Speak command">
+              <i class="fa-solid fa-microphone"></i>
+            </button>
+            <input type="text" id="copilot-input" class="chat-input-field" placeholder="Ask Co-pilot..." onkeypress="handleCopilotKeypress(event)">
+            <button class="chat-send-btn" onclick="sendCopilotMessage()" title="Send">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="doctor.js"></script>
+</body>
+</html>

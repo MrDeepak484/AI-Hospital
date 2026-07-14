@@ -1,0 +1,24 @@
+{
+  "name": "vaisoverse-ai-hospital",
+  "version": "2.0.0",
+  "description": "Fullstack AI-Powered Hospital & Healthcare Operations Platform",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^9.0.3",
+    "pdfkit": "^0.19.1",
+    "twilio": "^6.0.2"
+  },
+  "author": "Antigravity",
+  "license": "MIT",
+  "devDependencies": {
+    "stylelint-config-standard": "^40.0.0"
+  }
+}
