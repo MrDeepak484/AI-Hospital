@@ -3593,3 +3593,206 @@ footer {
 
 /* --- Notification empty state icon (replaces removed SVG illustration) --- */
 .notif-empty-icon { width:56px; height:56px; border-radius:50%; background:#F1F5F9; display:flex; align-items:center; justify-content:center; margin: 0 auto 14px; font-size:22px; color: var(--text-muted); }
+
+/* --- Unified Portal Login Modal CSS --- */
+.login-modal-content {
+  max-width: 480px !important;
+  padding: 30px !important;
+}
+.role-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 15px;
+}
+.role-card {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.role-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.8);
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-sm);
+}
+.role-card.active {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.15);
+}
+.role-card.active .role-icon i {
+  color: var(--color-accent);
+  transform: scale(1.1);
+}
+.role-card.active .role-name {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+.role-icon {
+  font-size: 20px;
+  height: 38px;
+  width: 38px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+.role-icon i {
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+.role-name {
+  font-size: 13px;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-secondary);
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-with-icon .input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.input-with-icon .form-input {
+  padding-left: 38px !important;
+}
+
+.quick-access-panel {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--border-color);
+}
+.quick-access-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.quick-access-title i {
+  color: var(--color-warning);
+}
+.quick-access-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.quick-access-btn {
+  background: rgba(241, 245, 249, 0.6);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 8px 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.quick-access-btn:hover {
+  background: #fff;
+  border-color: var(--border-color);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.btn-role-badge {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.badge-doc {
+  background: rgba(112, 0, 255, 0.08);
+  color: #7000FF;
+}
+.badge-pat {
+  background: rgba(16, 185, 129, 0.08);
+  color: #10B981;
+}
+.badge-ph {
+  background: rgba(245, 158, 11, 0.08);
+  color: #F59E0B;
+}
+
+/* --- Transparent Header Bright Wordings Overrides --- */
+header:not(.scrolled):not(.dash-header) .logo-text {
+  color: #ffffff !important;
+}
+header:not(.scrolled):not(.dash-header) .nav-links a {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+header:not(.scrolled):not(.dash-header) .nav-links a:hover {
+  color: #ffffff !important;
+}
+header:not(.scrolled):not(.dash-header) .nav-links a.nav-link-active {
+  color: #ffffff !important;
+}
+header:not(.scrolled):not(.dash-header) .menu-toggle i {
+  color: #ffffff !important;
+}
+header:not(.scrolled):not(.dash-header) .notif-bell-btn {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+header:not(.scrolled):not(.dash-header) .notif-bell-btn:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: #ffffff !important;
+}
+
+/* --- Auth switcher tabs in login modal --- */
+.auth-tab-btn {
+  background: transparent;
+  border: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 8px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.auth-tab-btn:hover {
+  color: var(--color-accent);
+}
+.auth-tab-btn.active-tab {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+.auth-tab-btn.active-tab::after {
+  content: '';
+  position: absolute;
+  bottom: -13px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--grad-accent);
+  border-radius: var(--radius-full);
+}

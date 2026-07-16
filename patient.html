@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vaisoverse | Patient Operations Dashboard</title>
+  <meta name="description" content="Manage appointments, view medical history, check prescriptions, and chat with the AI Health Companion on the Vaisoverse Patient Portal.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+
+  <div id="toast-container" class="toast-container">
+    <div class="toast">
+      <i class="fa-solid fa-circle-check toast-icon"></i>
+      <span id="toast-message">Notification Message</span>
+    </div>
+  </div>
+
+  <!-- ===== DASHBOARD HEADER ===== -->
+  <header id="main-header" class="scrolled dash-header">
+    <div class="container">
+      <div class="nav-wrapper">
+        <a href="index.html" class="logo">
+          <img src="assets/images/Logo.png" alt="Vaisoverse" class="logo-img">
+          <span class="logo-text">Vaiso</span><span class="logo-highlight">verse</span>
+          <span class="badge-role" style="background:#10B981">Patient</span>
+        </a>
+        <div class="header-actions" style="display:flex; align-items:center; gap:16px;">
+          <span class="user-greeting" id="patient-greeting" style="font-size: 13px; font-weight: 500; color: var(--text-secondary);"></span>
+          <button onclick="handleLogout()" class="btn btn-ghost doctor-link" style="border:1px solid var(--border-color); padding: 8px 16px;">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MAIN DASHBOARD ===== -->
+  <main class="dashboard-container">
+    <div class="container">
+      <div class="dashboard-grid">
+
+        <!-- ===== LEFT SIDEBAR ===== -->
+        <aside class="dashboard-sidebar glass-panel">
+          <div class="doctor-switcher-container">
+            <label class="form-label" for="active-patient-select">Select Patient Profile</label>
+            <div class="select-wrapper">
+              <select id="active-patient-select" class="form-input select-styled" onchange="handlePatientSwitch(this.value)">
+                <option value="pat-1">Robert Dowson (A+)</option>
+                <option value="pat-2">Emily Watson (O-)</option>
+                <option value="pat-3">David Miller (B+)</option>
+              </select>
+              <i class="fa-solid fa-chevron-down select-chevron"></i>
+            </div>
+          </div>
+
+          <div class="doctor-snapshot-card" id="patient-snapshot">
+            <div class="snapshot-avatar" id="snapshot-avatar" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
+              <i class="fa-solid fa-user-injured"></i>
+            </div>
+            <div class="snapshot-info">
+              <h3 id="snapshot-name">Robert Dowson</h3>
+              <p id="snapshot-meta">Age: 45 | Male</p>
+              <div class="status-indicator-badge active" id="snapshot-status-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
+                <span class="badge-dot" style="background: #10B981"></span> Blood Group: <span id="snapshot-blood">A+</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sidebar decorative accent -->
+          <div class="sidebar-decor">
+            <i class="fa-solid fa-heart-pulse sidebar-decor-icon" style="color: #10B981;"></i>
+          </div>
+
+          <nav class="sidebar-nav">
+            <button class="nav-tab-btn active" data-tab="overview" onclick="switchTab('overview')">
+              <i class="fa-solid fa-chart-line"></i> Overview & Meds
+            </button>
+            <button class="nav-tab-btn" data-tab="book" onclick="switchTab('book')">
+              <i class="fa-solid fa-calendar-plus"></i> Book Consultation
+            </button>
+            <button class="nav-tab-btn" data-tab="reports" onclick="switchTab('reports')">
+              <i class="fa-solid fa-file-medical"></i> Medical Reports
+            </button>
+          </nav>
+        </aside>
+
+        <!-- ===== MAIN CONTENT ===== -->
+        <section class="dashboard-content-area">
+
+          <!-- TAB: Overview -->
+          <div class="dashboard-tab-content active" id="tab-overview">
+            <div class="tab-header">
+              <h2>My Health Record</h2>
+              <p>Monitor your appointments, active prescriptions, and clinical history.</p>
+            </div>
+
+            <!-- Stats Ribbon -->
+            <div class="stats-ribbon-grid">
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper purple">
+                  <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <div class="stat-data">
+                  <span class="stat-label">Appointments</span>
+                  <span class="stat-value" id="stat-total-apts">0</span>
+                </div>
+              </div>
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper green">
+                  <i class="fa-solid fa-pills"></i>
+                </div>
+                <div class="stat-data">
+                  <span class="stat-label">Active Medications</span>
+                  <span class="stat-value" id="stat-active-meds">0</span>
+                </div>
+              </div>
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper blue">
+                  <i class="fa-solid fa-file-waveform"></i>
+                </div>
+                <div class="stat-data">
+                  <span class="stat-label">Lab Reports</span>
+                  <span class="stat-value" id="stat-total-reports">1</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Two Column Layout: Appointments List vs Active Medications Card -->
+            <div style="display:grid; grid-template-columns: 1.6fr 1fr; gap: 24px; margin-top: 24px;" class="patient-overview-columns">
+              
+              <!-- Appointments List -->
+              <div class="appointments-table-container glass-panel" style="margin-top:0;">
+                <div class="table-header">
+                  <h3><i class="fa-solid fa-calendar-days"></i> My Consultations</h3>
+                  <span class="table-subtitle" id="table-subtitle-count">Showing appointments</span>
+                </div>
+                <div class="table-responsive">
+                  <table class="dashboard-table">
+                    <thead>
+                      <tr>
+                        <th>Physician</th>
+                        <th>Time Slot</th>
+                        <th>Complaint</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="appointments-tbody">
+                      <!-- Rendered dynamically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Prescription List -->
+              <div class="glass-panel" style="display:flex; flex-direction:column; gap:16px;">
+                <div class="table-header" style="margin-bottom:0">
+                  <h3><i class="fa-solid fa-prescription-bottle-medical" style="color:var(--color-success)"></i> Active Prescriptions</h3>
+                  <span class="table-subtitle">Syncs with central pharmacy</span>
+                </div>
+                <div class="medications-list" id="medications-list" style="display:flex; flex-direction:column; gap:10px;">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- TAB: Book Consultation -->
+          <div class="dashboard-tab-content" id="tab-book">
+            <div class="tab-header">
+              <h2>Schedule Consultation</h2>
+              <p>Reserve a secure slot with a specialist. Confirmation is processed immediately.</p>
+            </div>
+            
+            <div class="glass-panel" style="max-width: 600px;">
+              <form onsubmit="submitBooking(event)">
+                <div class="form-group">
+                  <label class="form-label" for="booking-doctor">Select Physician Specialist</label>
+                  <div class="select-wrapper">
+                    <select id="booking-doctor" class="form-input select-styled" onchange="loadDoctorSlots(this.value)" required>
+                      <option value="" disabled selected>Choose a physician...</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down select-chevron"></i>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Available Time Slots</label>
+                  <div id="slots-pills-container" class="slots-grid" style="margin-top: 8px;">
+                    <div style="color:var(--text-muted); font-size:13px; font-style:italic;">Please select a doctor to load availability.</div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="booking-reason">Chief Complaint / Reason for Visit</label>
+                  <input type="text" id="booking-reason" class="form-input" placeholder="Regular checkup, migraine follow-up, allergy symptoms..." required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-glow" style="width:100%; margin-top: 10px;">
+                  Confirm & Dispatch Appointment
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- TAB: Medical Reports -->
+          <div class="dashboard-tab-content" id="tab-reports">
+            <div class="tab-header">
+              <h2>Clinical Reports & Records</h2>
+              <p>Upload and view official diagnostic sheets, lab results, and MRI files.</p>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+              <!-- Upload panel -->
+              <div class="glass-panel">
+                <div class="table-header">
+                  <h3><i class="fa-solid fa-cloud-arrow-up"></i> Upload New Report</h3>
+                </div>
+                <div class="upload-dropzone" id="report-dropzone" style="border: 2px dashed var(--border-color); border-radius: var(--radius-md); padding: 40px 20px; text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                  <div style="font-size:36px; color:var(--color-accent); margin-bottom:10px;"><i class="fa-solid fa-file-pdf"></i></div>
+                  <h4 style="font-family:'Outfit',sans-serif; color:var(--text-primary); margin-bottom:6px;">Select or Drag File</h4>
+                  <p style="font-size:12px; color:var(--text-muted); margin-bottom:15px;">PDF, PNG, JPG files accepted (Max 10MB)</p>
+                  <input type="file" id="report-file-input" style="display:none;" onchange="handleReportUpload(this.files)">
+                  <button type="button" class="btn btn-ghost" onclick="document.getElementById('report-file-input').click()" style="border:1px solid var(--border-color)">Browse Files</button>
+                </div>
+              </div>
+
+              <!-- List of uploaded reports -->
+              <div class="glass-panel">
+                <div class="table-header">
+                  <h3><i class="fa-solid fa-folder-open"></i> Record Library</h3>
+                </div>
+                <div class="uploaded-files-log" id="reports-list-container" style="display:flex; flex-direction:column; gap:12px; max-height: 280px; overflow-y:auto;">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ===== RIGHT SIDEBAR: AI HEALTH COMPANION ===== -->
+        <aside class="copilot-sidebar glass-panel">
+          <div class="copilot-header">
+            <div class="copilot-logo-wrapper">
+              <span class="bot-icon">🏥</span>
+              <div>
+                <h4>Vaisoverse AI</h4>
+                <p>Clinical Health Assistant</p>
+              </div>
+            </div>
+            <button class="copilot-action-btn" onclick="clearCompanionChat()" title="Reset chat history">
+              <i class="fa-solid fa-rotate-left"></i>
+            </button>
+          </div>
+
+          <div class="copilot-messages" id="companion-messages">
+            <div class="copilot-bubble-wrapper bot">
+              <div class="copilot-avatar-msg">🏥</div>
+              <div>
+                <div class="copilot-bubble">
+                  Hello, patient. I am the <strong>Vaisoverse AI Health Companion</strong>. I have access to your active prescriptions, consultations, and lab uploads. <br><br>How can I assist you with your health query today?
+                </div>
+                <span class="msg-time">Just now</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="copilot-quick-commands">
+            <button class="copilot-pill" onclick="sendCompanionCommand('What medications am I taking?')"><i class="fa-solid fa-pills"></i> Active Meds</button>
+            <button class="copilot-pill" onclick="sendCompanionCommand('Explain my latest lab report')"><i class="fa-solid fa-file-waveform"></i> Explain Lab</button>
+            <button class="copilot-pill" onclick="sendCompanionCommand('Check my upcoming consultations')"><i class="fa-solid fa-calendar-check"></i> Consultations</button>
+          </div>
+
+          <div class="copilot-input-bar">
+            <input type="text" id="companion-input" class="chat-input-field" placeholder="Ask Health Assistant..." onkeypress="handleCompanionKeypress(event)">
+            <button class="chat-send-btn" onclick="sendCompanionMessage()" title="Send">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="patient.js"></script>
+</body>
+</html>

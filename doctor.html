@@ -26,10 +26,11 @@
           <span class="logo-text">Vaiso</span><span class="logo-highlight">verse</span>
           <span class="badge-role">Staff</span>
         </a>
-        <div class="header-actions">
-          <a href="index.html" class="btn btn-ghost doctor-link">
-            <i class="fa-solid fa-arrow-left"></i> Patient Portal
-          </a>
+        <div class="header-actions" style="display:flex; align-items:center; gap:16px;">
+          <span class="user-greeting" id="doctor-greeting" style="font-size: 13px; font-weight: 500; color: var(--text-secondary);"><i class="fa-solid fa-user-circle"></i> Logged In</span>
+          <button onclick="handleLogout()" class="btn btn-ghost doctor-link" style="border:1px solid var(--border-color); padding: 8px 16px;">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+          </button>
         </div>
       </div>
     </div>
@@ -315,6 +316,56 @@
       </div>
     </div>
   </main>
+
+  <!-- ===== PRESCRIPTION MODAL ===== -->
+  <div class="modal-overlay" id="prescription-modal">
+    <div class="modal-content" style="max-width: 500px;">
+      <button class="modal-close" onclick="closePrescriptionModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-file-prescription" style="color:var(--color-accent)"></i> Issue Patient Prescription</h3>
+        <p>Prescribe medications directly to the patient dashboard and pharmacy dispensary.</p>
+      </div>
+      <form onsubmit="submitPrescription(event)">
+        <input type="hidden" id="rx-patient-id">
+        
+        <div class="form-group">
+          <label class="form-label">Patient Name</label>
+          <input type="text" id="rx-patient-name" class="form-input" readonly style="background:rgba(241,245,249,0.5)">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Select Medications</label>
+          <div class="medication-checkboxes" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:10px; background:rgba(241,245,249,0.4); border-radius:var(--radius-sm); border:1px solid var(--border-color); max-height:160px; overflow-y:auto;">
+            <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-primary); cursor:pointer;">
+              <input type="checkbox" name="rx-drugs" value="Atorvastatin 20mg - Once daily at night"> Atorvastatin 20mg
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-primary); cursor:pointer;">
+              <input type="checkbox" name="rx-drugs" value="Lisinopril 10mg - Once daily in the morning"> Lisinopril 10mg
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-primary); cursor:pointer;">
+              <input type="checkbox" name="rx-drugs" value="Ibuprofen 400mg - As needed for pain"> Ibuprofen 400mg
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-primary); cursor:pointer;">
+              <input type="checkbox" name="rx-drugs" value="Amoxicillin 500mg - 3 times daily for 7 days"> Amoxicillin 500mg
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-primary); cursor:pointer;">
+              <input type="checkbox" name="rx-drugs" value="Sumatriptan 50mg - At onset of migraine"> Sumatriptan 50mg
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-primary); cursor:pointer;">
+              <input type="checkbox" name="rx-drugs" value="Topiramate 25mg - Daily for migraine prevention"> Topiramate 25mg
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="rx-instructions">Instructions & Clinical Notes</label>
+          <textarea id="rx-instructions" class="form-input" rows="3" placeholder="Take with food, avoid alcohol, monitor blood pressure..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-glow" style="width:100%; margin-top:10px;">Dispatch Prescription to Pharmacy</button>
+      </form>
+    </div>
+  </div>
 
   <script src="data.js"></script>
   <script src="doctor.js"></script>

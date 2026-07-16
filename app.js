@@ -664,28 +664,214 @@ async function handleFileSelected(event) {
   }
 }
 
-// 8. Book Demo Modal Logic
+// 8. Book Demo (Portal Login) Modal Logic
 function openDemoModal() {
   document.getElementById('demo-modal').classList.add('active');
+  // Reset tabs to login
+  toggleAuthMode('login');
+  // Reset form inputs and default to doctor role on open
+  selectLoginRole('doctor');
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  
+  // Clear registration fields if present
+  if (document.getElementById('reg-name')) {
+    document.getElementById('reg-name').value = '';
+    document.getElementById('reg-username').value = '';
+    document.getElementById('reg-password').value = '';
+    document.getElementById('reg-email').value = '';
+    document.getElementById('reg-phone').value = '';
+    document.getElementById('reg-age').value = '';
+  }
 }
 
 function closeDemoModal() {
   document.getElementById('demo-modal').classList.remove('active');
 }
 
-function submitDemoForm(event) {
+// Portal login role selector toggle
+function selectLoginRole(role) {
+  document.getElementById('login-role').value = role;
+  
+  const cards = document.querySelectorAll('.role-card');
+  cards.forEach(card => {
+    if (card.getAttribute('data-role') === role) {
+      card.classList.add('active');
+    } else {
+      card.classList.remove('active');
+    }
+  });
+
+  const nameInput = document.getElementById('login-username');
+  if (role === 'doctor') {
+    nameInput.placeholder = 'e.g., mercer, reynolds, carter';
+  } else if (role === 'patient') {
+    nameInput.placeholder = 'e.g., dowson, watson, miller';
+  } else {
+    nameInput.placeholder = 'e.g., pharmacy';
+  }
+}
+
+// Handle login form submission
+async function handleLogin(event) {
   event.preventDefault();
-  const name = document.getElementById('demo-name').value;
-  const email = document.getElementById('demo-email').value;
-  const size = document.getElementById('demo-size').value;
+  const role = document.getElementById('login-role').value;
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value.trim();
   
-  closeDemoModal();
-  showToast(`Thank you, Dr. ${name}. A custom demo invite has been sent to ${email}.`, 'success');
+  try {
+    const result = await authenticateUser(username, password, role);
+    if (result.success) {
+      sessionStorage.setItem('vaiso_session', JSON.stringify(result.user));
+      showToast(`Welcome back, ${result.user.name}! Redirecting...`, 'success');
+      
+      setTimeout(() => {
+        closeDemoModal();
+        if (role === 'doctor') {
+          window.location.href = 'doctor.html';
+        } else if (role === 'patient') {
+          window.location.href = 'patient.html';
+        } else if (role === 'pharmacy') {
+          window.location.href = 'pharmacy.html';
+        }
+      }, 1000);
+    }
+  } catch (error) {
+    showToast(error.message || 'Login failed. Please verify credentials.', 'error');
+  }
+}
+
+// Toggle Auth mode (Login vs Register) in modal
+function toggleAuthMode(mode) {
+  const loginForm = document.getElementById('portal-login-form');
+  const registerForm = document.getElementById('portal-register-form');
+  const tabLogin = document.getElementById('auth-tab-login');
+  const tabRegister = document.getElementById('auth-tab-register');
   
-  // Clear form
-  document.getElementById('demo-name').value = '';
-  document.getElementById('demo-email').value = '';
-  document.getElementById('demo-size').value = '';
+  if (mode === 'login') {
+    loginForm.style.display = 'block';
+    registerForm.style.display = 'none';
+    tabLogin.classList.add('active-tab');
+    tabRegister.classList.remove('active-tab');
+  } else {
+    loginForm.style.display = 'none';
+    registerForm.style.display = 'block';
+    tabLogin.classList.remove('active-tab');
+    tabRegister.classList.add('active-tab');
+    // Default to patient when switching to register tab
+    selectRegRole('patient');
+  }
+}
+
+// Select registration role (Doctor / Patient / Pharmacy)
+function selectRegRole(role) {
+  document.getElementById('reg-role').value = role;
+
+  // Toggle active state on role cards
+  document.querySelectorAll('#reg-role-cards .role-card').forEach(card => {
+    card.classList.toggle('active', card.getAttribute('data-reg-role') === role);
+  });
+
+  // Show/hide role-specific field blocks
+  document.getElementById('reg-patient-fields').style.display  = role === 'patient'  ? 'block' : 'none';
+  document.getElementById('reg-doctor-fields').style.display   = role === 'doctor'   ? 'block' : 'none';
+  document.getElementById('reg-pharmacy-fields').style.display = role === 'pharmacy' ? 'block' : 'none';
+
+  // Update submit button colour per role
+  const btn = document.getElementById('reg-submit-btn');
+  if (role === 'doctor') {
+    btn.style.background = '#7000FF';
+    btn.style.borderColor = '#7000FF';
+  } else if (role === 'pharmacy') {
+    btn.style.background = '#F59E0B';
+    btn.style.borderColor = '#F59E0B';
+  } else {
+    btn.style.background = 'var(--color-success)';
+    btn.style.borderColor = 'var(--color-success)';
+  }
+}
+
+// Handle registration form submission (all roles)
+async function handleRegister(event) {
+  event.preventDefault();
+
+  const role        = document.getElementById('reg-role').value;
+  const name        = document.getElementById('reg-name').value.trim();
+  const username    = document.getElementById('reg-username').value.trim();
+  const password    = document.getElementById('reg-password').value.trim();
+  const email       = document.getElementById('reg-email').value.trim();
+  const phone       = document.getElementById('reg-phone').value.trim();
+
+  try {
+    showToast('Creating account...', 'info');
+    let result;
+
+    if (role === 'patient') {
+      const age        = document.getElementById('reg-age').value;
+      const gender     = document.getElementById('reg-gender').value;
+      const bloodGroup = document.getElementById('reg-blood').value;
+      result = await registerUser({ name, username, password, email, phone, age, gender, bloodGroup });
+
+    } else if (role === 'doctor') {
+      const specialty     = document.getElementById('reg-specialty').value;
+      const qualification = document.getElementById('reg-qualification').value.trim();
+      const experience    = document.getElementById('reg-experience').value || '0';
+      const consultFee    = document.getElementById('reg-consult-fee').value || '50';
+      result = await registerDoctor({ name, username, password, email, phone, specialty, qualification, experience, consultFee });
+
+    } else if (role === 'pharmacy') {
+      const pharmacyName    = document.getElementById('reg-pharmacy-name').value.trim();
+      const license         = document.getElementById('reg-license').value.trim();
+      const address         = document.getElementById('reg-pharmacy-address').value.trim();
+      result = await registerPharmacy({ name, username, password, email, phone, pharmacyName, license, address });
+    }
+
+    if (result && result.success) {
+      sessionStorage.setItem('vaiso_session', JSON.stringify(result.user));
+      showToast(`Welcome, ${result.user.name}! Redirecting to your portal...`, 'success');
+      setTimeout(() => {
+        closeDemoModal();
+        if (role === 'doctor')   window.location.href = 'doctor.html';
+        else if (role === 'pharmacy') window.location.href = 'pharmacy.html';
+        else window.location.href = 'patient.html';
+      }, 1200);
+    }
+  } catch (error) {
+    showToast(error.message || 'Registration failed. Please check your inputs.', 'error');
+  }
+}
+
+
+
+
+// Shortcut login handler
+async function quickLogin(role, username) {
+  selectLoginRole(role);
+  document.getElementById('login-username').value = username;
+  document.getElementById('login-password').value = 'password';
+
+  showToast('Connecting to secure gateway...', 'info');
+  setTimeout(async () => {
+    try {
+      const result = await authenticateUser(username, 'password', role);
+      if (result.success) {
+        sessionStorage.setItem('vaiso_session', JSON.stringify(result.user));
+        showToast(`Access granted! Entering ${role} portal...`, 'success');
+        setTimeout(() => {
+          closeDemoModal();
+          if (role === 'doctor') {
+            window.location.href = 'doctor.html';
+          } else if (role === 'patient') {
+            window.location.href = 'patient.html';
+          } else if (role === 'pharmacy') {
+            window.location.href = 'pharmacy.html';
+          }
+        }, 1000);
+      }
+    } catch (e) {
+      showToast('Quick login failed: ' + e.message, 'error');
+    }
+  }, 600);
 }
 
 // 9. Toast Notification Handler

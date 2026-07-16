@@ -118,7 +118,86 @@ const INITIAL_DATABASE = {
     activeHospital: ""
   },
   chats: {},
-  uploadedFiles: []
+  uploadedFiles: [],
+  patients: [
+    {
+      id: "pat-1",
+      name: "Robert Dowson",
+      username: "dowson",
+      password: "password",
+      age: 45,
+      gender: "Male",
+      bloodGroup: "A+",
+      phone: "5551234",
+      email: "robert@vaisoverse.com",
+      activeMedications: ["Atorvastatin 20mg", "Lisinopril 10mg"],
+      records: [
+        { date: "2026-07-01", test: "Lipid Panel", status: "Normal", remarks: "Cholesterol levels within optimal range." }
+      ]
+    },
+    {
+      id: "pat-2",
+      name: "Emily Watson",
+      username: "watson",
+      password: "password",
+      age: 32,
+      gender: "Female",
+      bloodGroup: "O-",
+      phone: "5555678",
+      email: "emily@vaisoverse.com",
+      activeMedications: ["Ibuprofen 400mg"],
+      records: [
+        { date: "2026-07-03", test: "Basic Metabolic Panel (BMP)", status: "Normal", remarks: "Electrolytes clear." }
+      ]
+    },
+    {
+      id: "pat-3",
+      name: "David Miller",
+      username: "miller",
+      password: "password",
+      age: 58,
+      gender: "Male",
+      bloodGroup: "B+",
+      phone: "5559012",
+      email: "david@vaisoverse.com",
+      activeMedications: ["Sumatriptan 50mg"],
+      records: [
+        { date: "2026-07-05", test: "ECG (Electrocardiogram)", status: "Check Required", remarks: "Slight rhythm asymmetry noted." }
+      ]
+    }
+  ],
+  pharmacyInventory: [
+    { name: "Atorvastatin 20mg", stock: 150, threshold: 50, price: 15.00 },
+    { name: "Lisinopril 10mg", stock: 200, threshold: 50, price: 8.50 },
+    { name: "Ibuprofen 400mg", stock: 45, threshold: 60, price: 5.00 },
+    { name: "Amoxicillin 500mg", stock: 120, threshold: 40, price: 12.00 },
+    { name: "Sumatriptan 50mg", stock: 80, threshold: 20, price: 22.00 },
+    { name: "Topiramate 25mg", stock: 15, threshold: 30, price: 18.50 }
+  ],
+  prescriptions: [
+    {
+      id: "rx-1",
+      patientId: "pat-1",
+      patientName: "Robert Dowson",
+      doctorId: "dr-mercer",
+      doctorName: "Dr. Alan Mercer",
+      date: "2026-07-15",
+      drugs: ["Atorvastatin 20mg - Once daily", "Lisinopril 10mg - Once daily"],
+      instructions: "Take Atorvastatin at night and Lisinopril in the morning. Monitor blood pressure.",
+      status: "Pending"
+    },
+    {
+      id: "rx-2",
+      patientId: "pat-2",
+      patientName: "Emily Watson",
+      doctorId: "dr-carter",
+      doctorName: "Dr. Sarah Carter",
+      date: "2026-07-16",
+      drugs: ["Ibuprofen 400mg - As needed"],
+      instructions: "Take with food for pain relief. Maximum 3 times a day.",
+      status: "Dispensed"
+    }
+  ]
 };
 
 // ==========================================
@@ -495,7 +574,24 @@ function readDatabase() {
       return INITIAL_DATABASE;
     }
     const data = fs.readFileSync(DB_PATH, 'utf8');
-    return JSON.parse(data);
+    const parsed = JSON.parse(data);
+    let updated = false;
+    if (!parsed.patients) {
+      parsed.patients = INITIAL_DATABASE.patients;
+      updated = true;
+    }
+    if (!parsed.pharmacyInventory) {
+      parsed.pharmacyInventory = INITIAL_DATABASE.pharmacyInventory;
+      updated = true;
+    }
+    if (!parsed.prescriptions) {
+      parsed.prescriptions = INITIAL_DATABASE.prescriptions;
+      updated = true;
+    }
+    if (updated) {
+      writeDatabase(parsed);
+    }
+    return parsed;
   } catch (err) {
     console.error("Error reading database file:", err);
     return INITIAL_DATABASE;
@@ -1129,6 +1225,295 @@ app.post('/api/uploads/patient', upload.single('file'), (req, res) => {
 app.get('/api/uploads/patient', (req, res) => {
   const db = readDatabase();
   res.json(db.uploadedFiles);
+});
+
+// ==========================================
+// PORTAL LOGIN & ROLE MANAGEMENT APIs
+// ==========================================
+
+// Authenticate user login
+app.post('/api/auth/login', (req, res) => {
+  const { username, password, role } = req.body;
+  if (!username || !password || !role) {
+    return res.status(400).json({ success: false, error: 'Username, password and role are required' });
+  }
+
+  const db = readDatabase();
+  const lowerUser = username.toLowerCase();
+  
+  if (role === 'doctor') {
+    const doc = db.doctors.find(d => 
+      d.id.toLowerCase().includes(lowerUser) || 
+      d.name.toLowerCase().includes(lowerUser)
+    );
+    if (doc && password === 'password') {
+      return res.json({
+        success: true,
+        user: {
+          id: doc.id,
+          name: doc.title,
+          role: 'doctor',
+          specialty: doc.specialty
+        }
+      });
+    }
+  } else if (role === 'patient') {
+    const patient = db.patients.find(p => p.username.toLowerCase() === lowerUser);
+    if (patient && password === 'password') {
+      return res.json({
+        success: true,
+        user: {
+          id: patient.id,
+          name: patient.name,
+          role: 'patient',
+          age: patient.age,
+          gender: patient.gender,
+          bloodGroup: patient.bloodGroup
+        }
+      });
+    }
+  } else if (role === 'pharmacy') {
+    if ((lowerUser === 'pharmacy' || lowerUser === 'wellness') && password === 'password') {
+      return res.json({
+        success: true,
+        user: {
+          id: lowerUser === 'pharmacy' ? 'central-pharmacy' : 'wellness-pharmacy',
+          name: lowerUser === 'pharmacy' ? 'Vaisoverse Central Pharmacy' : 'City Wellness Pharmacy',
+          role: 'pharmacy',
+          license: lowerUser === 'pharmacy' ? 'PH-2026-9876' : 'PH-2026-4321'
+        }
+      });
+    }
+  }
+
+  return res.status(401).json({ success: false, error: 'Invalid username, password, or role selector.' });
+});
+
+// Register new patient
+app.post('/api/auth/register', (req, res) => {
+  const { name, username, email, phone, age, gender, bloodGroup, password } = req.body;
+  if (!name || !username || !email || !phone || !age || !gender || !bloodGroup || !password) {
+    return res.status(400).json({ success: false, error: 'All fields are required to register.' });
+  }
+
+  const db = readDatabase();
+  const lowerUser = username.toLowerCase();
+  
+  const usernameTaken = db.patients.some(p => p.username.toLowerCase() === lowerUser) || 
+                        db.doctors.some(d => d.id.toLowerCase() === lowerUser);
+  if (usernameTaken) {
+    return res.status(400).json({ success: false, error: 'Username is already taken.' });
+  }
+
+  const newPatient = {
+    id: "pat-" + Date.now(),
+    name,
+    username,
+    password,
+    age: parseInt(age),
+    gender,
+    bloodGroup,
+    phone,
+    email,
+    activeMedications: [],
+    records: []
+  };
+
+  db.patients.push(newPatient);
+  writeDatabase(db);
+
+  return res.json({
+    success: true,
+    user: {
+      id: newPatient.id,
+      name: newPatient.name,
+      role: 'patient',
+      age: newPatient.age,
+      gender: newPatient.gender,
+      bloodGroup: newPatient.bloodGroup
+    }
+  });
+});
+
+
+// Register new doctor
+app.post('/api/auth/register/doctor', (req, res) => {
+  const { name, username, email, phone, specialty, qualification, experience, consultFee, password } = req.body;
+  if (!name || !username || !email || !phone || !specialty || !password) {
+    return res.status(400).json({ success: false, error: 'Name, username, email, phone, specialty and password are required.' });
+  }
+  const db = readDatabase();
+  const lowerUser = username.toLowerCase();
+  const taken = db.doctors.some(d => d.id.toLowerCase() === lowerUser) ||
+                db.patients.some(p => p.username.toLowerCase() === lowerUser);
+  if (taken) return res.status(400).json({ success: false, error: 'Username is already taken.' });
+
+  const newId = username.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now();
+  const newDoc = {
+    id: newId,
+    title: 'Dr. ' + name,
+    name: 'Dr. ' + name,
+    username,
+    password,
+    specialty: specialty || 'General Physician',
+    qualification: qualification || 'MBBS',
+    experience: parseInt(experience) || 0,
+    consultFee: parseInt(consultFee) || 50,
+    email,
+    phone,
+    rating: 4.5,
+    reviews: 0,
+    available: true,
+    slots: ['09:00 AM','10:00 AM','11:00 AM','02:00 PM','03:00 PM','04:00 PM'],
+    appointments: []
+  };
+  db.doctors.push(newDoc);
+  writeDatabase(db);
+  return res.json({
+    success: true,
+    user: { id: newDoc.id, name: newDoc.title, role: 'doctor', specialty: newDoc.specialty }
+  });
+});
+
+// Register new pharmacy
+app.post('/api/auth/register/pharmacy', (req, res) => {
+  const { name, username, email, phone, pharmacyName, license, address, password } = req.body;
+  if (!name || !username || !email || !phone || !pharmacyName || !license || !password) {
+    return res.status(400).json({ success: false, error: 'All pharmacy fields are required.' });
+  }
+  const db = readDatabase();
+  const lowerUser = username.toLowerCase();
+  const taken = db.doctors.some(d => d.id.toLowerCase() === lowerUser) ||
+                db.patients.some(p => p.username.toLowerCase() === lowerUser);
+  if (taken) return res.status(400).json({ success: false, error: 'Username is already taken.' });
+
+  const newId = 'pharma-' + Date.now();
+  // Optionally track pharmacies in the database if a list exists
+  if (!db.pharmacies) db.pharmacies = [];
+  db.pharmacies.push({ id: newId, username, password, pharmacyName, name, email, phone, license, address });
+  writeDatabase(db);
+  return res.json({
+    success: true,
+    user: { id: newId, name: pharmacyName, role: 'pharmacy', license }
+  });
+});
+
+// Get all patients
+app.get('/api/patients', (req, res) => {
+  const db = readDatabase();
+  res.json(db.patients || []);
+});
+
+// Get patient by id
+app.get('/api/patients/:id', (req, res) => {
+  const db = readDatabase();
+  const patient = db.patients.find(p => p.id === req.params.id);
+  if (!patient) return res.status(404).json({ error: 'Patient not found' });
+  res.json(patient);
+});
+
+// Get all prescriptions or prescriptions for a specific patient
+app.get('/api/prescriptions', (req, res) => {
+  const db = readDatabase();
+  const { patientId } = req.query;
+  let list = db.prescriptions || [];
+  if (patientId) {
+    list = list.filter(r => r.patientId === patientId);
+  }
+  res.json(list);
+});
+
+// Create new prescription
+app.post('/api/prescriptions', (req, res) => {
+  const { patientId, doctorId, drugs, instructions } = req.body;
+  if (!patientId || !doctorId || !drugs) {
+    return res.status(400).json({ error: 'Missing patientId, doctorId, or drugs list' });
+  }
+
+  const db = readDatabase();
+  const patient = db.patients.find(p => p.id === patientId);
+  const doctor = db.doctors.find(d => d.id === doctorId);
+
+  if (!patient) return res.status(404).json({ error: 'Patient not found' });
+  if (!doctor) return res.status(404).json({ error: 'Doctor not found' });
+
+  // Add drugs to active medications if not present
+  const drugNames = drugs.map(d => d.split(' - ')[0]);
+  drugNames.forEach(name => {
+    if (!patient.activeMedications.includes(name)) {
+      patient.activeMedications.push(name);
+    }
+  });
+
+  const newRx = {
+    id: "rx-" + Date.now(),
+    patientId,
+    patientName: patient.name,
+    doctorId,
+    doctorName: doctor.title,
+    date: new Date().toISOString().split('T')[0],
+    drugs,
+    instructions: instructions || "Take as directed",
+    status: "Pending"
+  };
+
+  db.prescriptions = db.prescriptions || [];
+  db.prescriptions.push(newRx);
+  
+  writeDatabase(db);
+  broadcastEvent('prescriptions_updated', newRx);
+
+  res.json({ success: true, prescription: newRx });
+});
+
+// Update prescription status
+app.put('/api/prescriptions/:id/status', (req, res) => {
+  const { status } = req.body;
+  if (!status) return res.status(400).json({ error: 'Status is required' });
+
+  const db = readDatabase();
+  const rxIndex = db.prescriptions.findIndex(r => r.id === req.params.id);
+  if (rxIndex === -1) return res.status(404).json({ error: 'Prescription not found' });
+
+  db.prescriptions[rxIndex].status = status;
+  
+  // If dispensed, also deduct from inventory if drugs match
+  if (status === 'Dispensed') {
+    const rx = db.prescriptions[rxIndex];
+    rx.drugs.forEach(dString => {
+      const drugName = dString.split(' - ')[0]; // E.g., "Atorvastatin 20mg"
+      const item = db.pharmacyInventory.find(i => i.name.toLowerCase() === drugName.toLowerCase());
+      if (item) {
+        item.stock = Math.max(0, item.stock - 10); // Deduct standard quantity 10
+      }
+    });
+  }
+
+  writeDatabase(db);
+  broadcastEvent('prescriptions_updated', db.prescriptions[rxIndex]);
+  res.json({ success: true, prescription: db.prescriptions[rxIndex] });
+});
+
+// Get pharmacy inventory
+app.get('/api/pharmacy/inventory', (req, res) => {
+  const db = readDatabase();
+  res.json(db.pharmacyInventory || []);
+});
+
+// Restock a drug
+app.put('/api/pharmacy/inventory/restock', (req, res) => {
+  const { name, quantity } = req.body;
+  if (!name || !quantity) return res.status(400).json({ error: 'Name and quantity are required' });
+
+  const db = readDatabase();
+  const item = db.pharmacyInventory.find(i => i.name.toLowerCase() === name.toLowerCase());
+  if (!item) return res.status(404).json({ error: 'Drug not found in inventory' });
+
+  item.stock = (item.stock || 0) + parseInt(quantity);
+  writeDatabase(db);
+  
+  broadcastEvent('inventory_updated', item);
+  res.json({ success: true, item });
 });
 
 // Start Server listening

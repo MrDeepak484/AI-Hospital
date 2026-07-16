@@ -37,14 +37,12 @@
           <li><a href="#pricing">Pricing</a></li>
           <li><a href="#testimonials">Testimonials</a></li>
           <li><a href="#contact">Contact</a></li>
-          <li class="nav-cta-mobile"><a href="doctor.html"><i class="fa-solid fa-user-doctor"></i> Doctor Portal</a></li>
         </ul>
         <div class="header-actions">
           <button class="notif-bell-btn" id="notif-bell-btn" onclick="toggleNotifPanel()" aria-label="Notifications">
             <i class="fa-solid fa-bell"></i>
             <span class="notif-badge" id="notif-badge" style="display:none">0</span>
           </button>
-          <a href="doctor.html" class="btn btn-ghost doctor-link"><i class="fa-solid fa-user-doctor"></i> Doctor Portal</a>
           <button class="btn btn-primary" onclick="openDemoModal()">Book Demo</button>
         </div>
         <button class="menu-toggle" id="menu-toggle" aria-label="Toggle Navigation Menu">
@@ -825,29 +823,251 @@
     </button>
   </div>
 
-  <!-- ===== BOOK DEMO MODAL ===== -->
+  <!-- ===== PORTAL LOGIN MODAL ===== -->
   <div class="modal-overlay" id="demo-modal">
-    <div class="modal-content">
+    <div class="modal-content login-modal-content">
       <button class="modal-close" onclick="closeDemoModal()"><i class="fa-solid fa-xmark"></i></button>
       <div class="modal-header">
-        <h3>Schedule Vaisoverse Demo</h3>
-        <p>Complete the details below to receive a personalized dashboard preview for your hospital staff.</p>
+        <h3>Vaisoverse Portal Gateway</h3>
+        <p>Access clinical operations or create a new patient account.</p>
       </div>
-          <form onsubmit="submitDemoForm(event)">
-        <div class="form-group">
-          <label class="form-label" for="demo-name">Full Name</label>
-          <input type="text" id="demo-name" class="form-input" placeholder="Dr. Sarah Carter" required>
+
+      <!-- Auth Switcher Tabs -->
+      <div class="auth-tabs" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom: 20px; border-bottom:1px solid var(--border-color); padding-bottom:12px;">
+        <button type="button" id="auth-tab-login" class="auth-tab-btn active-tab" onclick="toggleAuthMode('login')">
+          <i class="fa-solid fa-right-to-bracket"></i> Login (Old Member)
+        </button>
+        <button type="button" id="auth-tab-register" class="auth-tab-btn" onclick="toggleAuthMode('register')">
+          <i class="fa-solid fa-user-plus"></i> Register (New Member)
+        </button>
+      </div>
+      
+      <!-- LOGIN FORM -->
+      <form onsubmit="handleLogin(event)" id="portal-login-form">
+        <!-- Role Cards Selector -->
+        <label class="form-label" style="margin-bottom: 8px;">Select Your Portal Role</label>
+        <div class="role-cards-grid">
+          <div class="role-card active" data-role="doctor" onclick="selectLoginRole('doctor')">
+            <div class="role-icon"><i class="fa-solid fa-user-doctor"></i></div>
+            <div class="role-name">Doctor</div>
+          </div>
+          <div class="role-card" data-role="patient" onclick="selectLoginRole('patient')">
+            <div class="role-icon"><i class="fa-solid fa-hospital-user"></i></div>
+            <div class="role-name">Patient</div>
+          </div>
+          <div class="role-card" data-role="pharmacy" onclick="selectLoginRole('pharmacy')">
+            <div class="role-icon"><i class="fa-solid fa-prescription-bottle-medical"></i></div>
+            <div class="role-name">Pharmacy</div>
+          </div>
         </div>
-        <div class="form-group">
-          <label class="form-label" for="demo-email">Hospital Email</label>
-          <input type="email" id="demo-email" class="form-input" placeholder="sarah.carter@hospital.org" required>
+        
+        <input type="hidden" id="login-role" value="doctor">
+
+        <div class="form-group" style="margin-top: 15px;">
+          <label class="form-label" for="login-username">Username</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-user input-icon"></i>
+            <input type="text" id="login-username" class="form-input" placeholder="Enter username..." required>
+          </div>
         </div>
+        
         <div class="form-group">
-          <label class="form-label" for="demo-size">Hospital Size (Beds)</label>
-          <input type="number" id="demo-size" class="form-input" placeholder="250" required>
+          <label class="form-label" for="login-password">Password</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary btn-glow" style="width:100%;margin-top:10px;">Request Operations Demo</button>
+        
+        <button type="submit" class="btn btn-primary btn-glow" style="width:100%; margin-top: 15px;">Authenticate &amp; Enter Portal</button>
       </form>
+
+      <!-- REGISTRATION FORM (ALL ROLES) -->
+      <form onsubmit="handleRegister(event)" id="portal-register-form" style="display:none">
+
+        <!-- Register Role Selector -->
+        <label class="form-label" style="margin-bottom: 8px;">Select Your Role</label>
+        <div class="role-cards-grid" id="reg-role-cards">
+          <div class="role-card" data-reg-role="doctor" onclick="selectRegRole('doctor')">
+            <div class="role-icon"><i class="fa-solid fa-user-doctor"></i></div>
+            <div class="role-name">Doctor</div>
+          </div>
+          <div class="role-card active" data-reg-role="patient" onclick="selectRegRole('patient')">
+            <div class="role-icon"><i class="fa-solid fa-hospital-user"></i></div>
+            <div class="role-name">Patient</div>
+          </div>
+          <div class="role-card" data-reg-role="pharmacy" onclick="selectRegRole('pharmacy')">
+            <div class="role-icon"><i class="fa-solid fa-prescription-bottle-medical"></i></div>
+            <div class="role-name">Pharmacy</div>
+          </div>
+        </div>
+        <input type="hidden" id="reg-role" value="patient">
+
+        <!-- COMMON: Full Name, Username, Password -->
+        <div class="form-group" style="margin-top:14px;">
+          <label class="form-label" for="reg-name">Full Name</label>
+          <div class="input-with-icon">
+            <i class="fa-solid fa-address-card input-icon"></i>
+            <input type="text" id="reg-name" class="form-input" placeholder="e.g., Jane Smith" required>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label" for="reg-username">Username</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-user input-icon"></i>
+              <input type="text" id="reg-username" class="form-input" placeholder="e.g., jane_smith" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-password">Password</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-lock input-icon"></i>
+              <input type="password" id="reg-password" class="form-input" placeholder="••••••••" required>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label class="form-label" for="reg-email">Email Address</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-envelope input-icon"></i>
+              <input type="email" id="reg-email" class="form-input" placeholder="jane@example.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-phone">Phone Number</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-phone input-icon"></i>
+              <input type="text" id="reg-phone" class="form-input" placeholder="5550199" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- PATIENT-SPECIFIC FIELDS -->
+        <div id="reg-patient-fields">
+          <div style="display:grid; grid-template-columns:1fr 1.2fr 1.2fr; gap:12px;">
+            <div class="form-group">
+              <label class="form-label" for="reg-age">Age</label>
+              <input type="number" id="reg-age" class="form-input" placeholder="30" style="padding-left:14px !important;">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-gender">Gender</label>
+              <div class="select-wrapper">
+                <select id="reg-gender" class="form-input select-styled" style="padding-left:14px !important;">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+                <i class="fa-solid fa-chevron-down select-chevron" style="right:10px;"></i>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-blood">Blood Group</label>
+              <div class="select-wrapper">
+                <select id="reg-blood" class="form-input select-styled" style="padding-left:14px !important;">
+                  <option value="A+">A+</option><option value="A-">A-</option>
+                  <option value="B+">B+</option><option value="B-">B-</option>
+                  <option value="AB+">AB+</option><option value="AB-">AB-</option>
+                  <option value="O+">O+</option><option value="O-">O-</option>
+                </select>
+                <i class="fa-solid fa-chevron-down select-chevron" style="right:10px;"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOCTOR-SPECIFIC FIELDS -->
+        <div id="reg-doctor-fields" style="display:none">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label class="form-label" for="reg-specialty">Specialty</label>
+              <div class="select-wrapper">
+                <select id="reg-specialty" class="form-input select-styled" style="padding-left:14px !important;">
+                  <option value="General Physician">General Physician</option>
+                  <option value="Cardiologist">Cardiologist</option>
+                  <option value="Neurologist">Neurologist</option>
+                  <option value="Dermatologist">Dermatologist</option>
+                  <option value="Orthopaedic">Orthopaedic</option>
+                  <option value="Paediatrician">Paediatrician</option>
+                  <option value="Gynaecologist">Gynaecologist</option>
+                  <option value="Psychiatrist">Psychiatrist</option>
+                  <option value="Radiologist">Radiologist</option>
+                  <option value="Oncologist">Oncologist</option>
+                </select>
+                <i class="fa-solid fa-chevron-down select-chevron" style="right:10px;"></i>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-qualification">Qualification</label>
+              <div class="input-with-icon">
+                <i class="fa-solid fa-graduation-cap input-icon"></i>
+                <input type="text" id="reg-qualification" class="form-input" placeholder="e.g., MBBS, MD">
+              </div>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label class="form-label" for="reg-experience">Experience (Years)</label>
+              <input type="number" id="reg-experience" class="form-input" placeholder="e.g., 5" style="padding-left:14px !important;">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-consult-fee">Consult Fee ($)</label>
+              <input type="number" id="reg-consult-fee" class="form-input" placeholder="e.g., 50" style="padding-left:14px !important;">
+            </div>
+          </div>
+        </div>
+
+        <!-- PHARMACY-SPECIFIC FIELDS -->
+        <div id="reg-pharmacy-fields" style="display:none">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label class="form-label" for="reg-pharmacy-name">Pharmacy Name</label>
+              <div class="input-with-icon">
+                <i class="fa-solid fa-hospital input-icon"></i>
+                <input type="text" id="reg-pharmacy-name" class="form-input" placeholder="e.g., City MedPlus">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="reg-license">License Number</label>
+              <div class="input-with-icon">
+                <i class="fa-solid fa-id-badge input-icon"></i>
+                <input type="text" id="reg-license" class="form-input" placeholder="e.g., PH-2026-1234">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="reg-pharmacy-address">Address</label>
+            <div class="input-with-icon">
+              <i class="fa-solid fa-location-dot input-icon"></i>
+              <input type="text" id="reg-pharmacy-address" class="form-input" placeholder="Full pharmacy address">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-glow" id="reg-submit-btn" style="width:100%; margin-top: 15px; background:var(--color-success); border-color:var(--color-success)">
+          <i class="fa-solid fa-user-plus"></i> Register &amp; Enter Portal
+        </button>
+      </form>
+
+
+      <!-- Quick access shortcuts -->
+      <div class="quick-access-panel">
+        <h4 class="quick-access-title"><i class="fa-solid fa-bolt"></i> Quick Demo Login</h4>
+        <div class="quick-access-grid">
+          <button type="button" class="quick-access-btn" onclick="quickLogin('doctor', 'mercer')">
+            <span class="btn-role-badge badge-doc">Doc</span> Dr. Mercer
+          </button>
+          <button type="button" class="quick-access-btn" onclick="quickLogin('patient', 'dowson')">
+            <span class="btn-role-badge badge-pat">Pat</span> R. Dowson
+          </button>
+          <button type="button" class="quick-access-btn" onclick="quickLogin('pharmacy', 'pharmacy')">
+            <span class="btn-role-badge badge-ph">Phar</span> Central Pharmacy
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
