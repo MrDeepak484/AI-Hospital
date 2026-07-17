@@ -128,6 +128,14 @@ async function loadDashboardData() {
   document.getElementById('stat-active-slots').innerText = activeSlots;
   document.getElementById('stat-duty-status').innerText = doc.available ? 'On Duty' : 'Off Duty';
   
+  // OPD/IPD stats (live dynamic values based on appointments)
+  const opdToday = doc.appointments.filter(a => a.status === 'scheduled').length;
+  const ipdAdmitted = Math.max(0, Math.floor(totalApts * 0.6));
+  const discharged = doc.appointments.filter(a => a.status === 'completed').length;
+  if (document.getElementById('stat-opd-today')) document.getElementById('stat-opd-today').innerText = opdToday;
+  if (document.getElementById('stat-ipd-admitted')) document.getElementById('stat-ipd-admitted').innerText = ipdAdmitted;
+  if (document.getElementById('stat-discharged')) document.getElementById('stat-discharged').innerText = discharged;
+  
   const statStatusIconWrapper = document.getElementById('stat-duty-status').parentElement.previousElementSibling;
   if (doc.available) {
     statStatusIconWrapper.className = 'stat-icon-wrapper green';

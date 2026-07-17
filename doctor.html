@@ -80,6 +80,15 @@
             <button class="nav-tab-btn" data-tab="schedule" onclick="switchTab('schedule')">
               <i class="fa-solid fa-calendar-days"></i> Availability & Slots
             </button>
+            <button class="nav-tab-btn" data-tab="opd" onclick="switchTab('opd')">
+              <i class="fa-solid fa-hospital-user"></i> OPD / IPD
+            </button>
+            <button class="nav-tab-btn" data-tab="billing" onclick="switchTab('billing')">
+              <i class="fa-solid fa-file-invoice-dollar"></i> Billing & Invoicing
+            </button>
+            <button class="nav-tab-btn" data-tab="roster" onclick="switchTab('roster')">
+              <i class="fa-solid fa-people-group"></i> Staff & Duty Roster
+            </button>
             <button class="nav-tab-btn" data-tab="profile" onclick="switchTab('profile')">
               <i class="fa-solid fa-user-gear"></i> Edit Profile
             </button>
@@ -201,6 +210,267 @@
                 </div>
                 <div class="slots-pill-grid" id="slots-container">
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: OPD / IPD Management -->
+          <div class="dashboard-tab-content" id="tab-opd">
+            <div class="tab-header">
+              <h2>OPD / IPD Management</h2>
+              <p>Track outpatient visits and inpatient admissions under your care.</p>
+            </div>
+            <div class="stats-ribbon-grid">
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper purple"><i class="fa-solid fa-person-walking-arrow-right"></i></div>
+                <div class="stat-data">
+                  <span class="stat-label">OPD Today</span>
+                  <span class="stat-value" id="stat-opd-today">0</span>
+                </div>
+              </div>
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper blue"><i class="fa-solid fa-bed-pulse"></i></div>
+                <div class="stat-data">
+                  <span class="stat-label">IPD Admitted</span>
+                  <span class="stat-value" id="stat-ipd-admitted">0</span>
+                </div>
+              </div>
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper green"><i class="fa-solid fa-door-open"></i></div>
+                <div class="stat-data">
+                  <span class="stat-label">Discharged Today</span>
+                  <span class="stat-value" id="stat-discharged">0</span>
+                </div>
+              </div>
+            </div>
+            <div class="appointments-table-container glass-panel" style="margin-top:24px;">
+              <div class="table-header">
+                <h3><i class="fa-solid fa-list-ul"></i> Patient Register</h3>
+                <span class="table-subtitle">OPD & IPD Combined View</span>
+              </div>
+              <div class="table-responsive">
+                <table class="dashboard-table">
+                  <thead>
+                    <tr>
+                      <th>Patient</th>
+                      <th>Type</th>
+                      <th>Ward / Room</th>
+                      <th>Admission Date</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="opd-ipd-tbody">
+                    <tr>
+                      <td><strong>Robert Dowson</strong><br><span style="font-size:11px;color:var(--text-muted)">ID: PT-4587</span></td>
+                      <td><span class="status-badge status-badge-scheduled">IPD</span></td>
+                      <td><i class="fa-solid fa-bed" style="color:var(--color-accent)"></i> Cardio Ward — Bed 4</td>
+                      <td>15 Jul 2026</td>
+                      <td><span class="status-badge" style="background:rgba(16,185,129,0.1);color:#10B981;border-color:rgba(16,185,129,0.3)">In Treatment</span></td>
+                      <td>
+                        <div class="table-actions">
+                          <button class="btn-action-success" onclick="showToast('Discharge form submitted','success')" title="Discharge Patient"><i class="fa-solid fa-door-open"></i></button>
+                          <button class="btn-action-success" style="background:#7000FF;border-color:#7000FF" onclick="openPrescriptionModal('Robert Dowson','apt-101')" title="Write Prescription"><i class="fa-solid fa-file-prescription"></i></button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Emily Watson</strong><br><span style="font-size:11px;color:var(--text-muted)">ID: PT-3421</span></td>
+                      <td><span class="status-badge" style="background:rgba(59,130,246,0.1);color:#3B82F6;border-color:rgba(59,130,246,0.3)">OPD</span></td>
+                      <td><i class="fa-solid fa-stethoscope" style="color:#3B82F6"></i> Consultation Room 2</td>
+                      <td>17 Jul 2026</td>
+                      <td><span class="status-badge status-badge-completed">Completed</span></td>
+                      <td><span style="font-size:12px;color:var(--text-muted)">Discharged</span></td>
+                    </tr>
+                    <tr>
+                      <td><strong>David Miller</strong><br><span style="font-size:11px;color:var(--text-muted)">ID: PT-2209</span></td>
+                      <td><span class="status-badge status-badge-scheduled">IPD</span></td>
+                      <td><i class="fa-solid fa-bed" style="color:var(--color-accent)"></i> Neuro Wing — Bed 11</td>
+                      <td>14 Jul 2026</td>
+                      <td><span class="status-badge" style="background:rgba(245,158,11,0.1);color:#F59E0B;border-color:rgba(245,158,11,0.3)">Under Observation</span></td>
+                      <td>
+                        <div class="table-actions">
+                          <button class="btn-action-success" onclick="showToast('Discharge form submitted','success')" title="Discharge Patient"><i class="fa-solid fa-door-open"></i></button>
+                          <button class="btn-action-success" style="background:#7000FF;border-color:#7000FF" onclick="openPrescriptionModal('David Miller','apt-201')" title="Write Prescription"><i class="fa-solid fa-file-prescription"></i></button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: Billing & Invoicing -->
+          <div class="dashboard-tab-content" id="tab-billing">
+            <div class="tab-header">
+              <h2>Billing & Invoicing</h2>
+              <p>Review consultation fees, generate invoices, and track payment status.</p>
+            </div>
+            <div class="stats-ribbon-grid">
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper green"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                <div class="stat-data">
+                  <span class="stat-label">Revenue Today</span>
+                  <span class="stat-value" id="stat-revenue-today">₹2,400</span>
+                </div>
+              </div>
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper purple"><i class="fa-solid fa-file-invoice"></i></div>
+                <div class="stat-data">
+                  <span class="stat-label">Invoices Raised</span>
+                  <span class="stat-value">3</span>
+                </div>
+              </div>
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper red"><i class="fa-solid fa-hourglass-half"></i></div>
+                <div class="stat-data">
+                  <span class="stat-label">Pending Payments</span>
+                  <span class="stat-value">1</span>
+                </div>
+              </div>
+            </div>
+            <div class="appointments-table-container glass-panel" style="margin-top:24px;">
+              <div class="table-header">
+                <h3><i class="fa-solid fa-receipt"></i> Invoice Register</h3>
+                <button class="btn btn-primary" style="padding:8px 16px;font-size:12px;" onclick="showToast('Invoice generated and sent to patient portal','success')"><i class="fa-solid fa-plus"></i> New Invoice</button>
+              </div>
+              <div class="table-responsive">
+                <table class="dashboard-table">
+                  <thead>
+                    <tr>
+                      <th>Invoice #</th>
+                      <th>Patient</th>
+                      <th>Service</th>
+                      <th>Amount</th>
+                      <th>Date</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>#INV-2026-001</strong></td>
+                      <td>Robert Dowson</td>
+                      <td>Cardiology Consultation</td>
+                      <td><strong style="color:#10B981">₹800</strong></td>
+                      <td>15 Jul 2026</td>
+                      <td><span class="status-badge status-badge-completed">Paid</span></td>
+                      <td><button class="btn btn-secondary" style="padding:5px 10px;font-size:11px;" onclick="showToast('Invoice PDF downloaded','success')"><i class="fa-solid fa-download"></i> PDF</button></td>
+                    </tr>
+                    <tr>
+                      <td><strong>#INV-2026-002</strong></td>
+                      <td>Emily Watson</td>
+                      <td>Post-surgery Follow-up</td>
+                      <td><strong style="color:#10B981">₹1,200</strong></td>
+                      <td>16 Jul 2026</td>
+                      <td><span class="status-badge status-badge-completed">Paid</span></td>
+                      <td><button class="btn btn-secondary" style="padding:5px 10px;font-size:11px;" onclick="showToast('Invoice PDF downloaded','success')"><i class="fa-solid fa-download"></i> PDF</button></td>
+                    </tr>
+                    <tr>
+                      <td><strong>#INV-2026-003</strong></td>
+                      <td>David Miller</td>
+                      <td>Neurology Assessment</td>
+                      <td><strong style="color:#F59E0B">₹400</strong></td>
+                      <td>17 Jul 2026</td>
+                      <td><span class="status-badge status-badge-scheduled">Pending</span></td>
+                      <td><button class="btn btn-primary" style="padding:5px 10px;font-size:11px;" onclick="showToast('Payment reminder sent to patient','success')"><i class="fa-solid fa-bell"></i> Remind</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: Staff & Duty Roster -->
+          <div class="dashboard-tab-content" id="tab-roster">
+            <div class="tab-header">
+              <h2>Staff & Duty Roster</h2>
+              <p>Manage on-duty schedules, shift assignments, and department coverage.</p>
+            </div>
+            <div class="stats-ribbon-grid">
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper green"><i class="fa-solid fa-user-check"></i></div>
+                <div class="stat-data">
+                  <span class="stat-label">On Duty Now</span>
+                  <span class="stat-value">8</span>
+                </div>
+              </div>
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper red"><i class="fa-solid fa-user-xmark"></i></div>
+                <div class="stat-data">
+                  <span class="stat-label">Off Duty</span>
+                  <span class="stat-value">3</span>
+                </div>
+              </div>
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper blue"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                <div class="stat-data">
+                  <span class="stat-label">On Leave</span>
+                  <span class="stat-value">2</span>
+                </div>
+              </div>
+            </div>
+            <div class="appointments-table-container glass-panel" style="margin-top:24px;">
+              <div class="table-header">
+                <h3><i class="fa-solid fa-calendar-week"></i> Today's Duty Schedule</h3>
+                <span class="table-subtitle">17 Jul 2026 — Morning Shift</span>
+              </div>
+              <div class="table-responsive">
+                <table class="dashboard-table">
+                  <thead>
+                    <tr>
+                      <th>Staff Member</th>
+                      <th>Role</th>
+                      <th>Department</th>
+                      <th>Shift Hours</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Dr. Alan Mercer</strong><br><span style="font-size:11px;color:var(--text-muted)">Staff ID: DOC-001</span></td>
+                      <td><i class="fa-solid fa-user-doctor" style="color:var(--color-accent)"></i> Cardiologist</td>
+                      <td>Cardiology Wing</td>
+                      <td><span class="time-slot-tag"><i class="fa-regular fa-clock"></i> 09:00 AM – 05:00 PM</span></td>
+                      <td><span class="status-badge" style="background:rgba(16,185,129,0.1);color:#10B981;border-color:rgba(16,185,129,0.3)">On Duty</span></td>
+                      <td><button class="btn btn-secondary" style="padding:5px 10px;font-size:11px;" onclick="showToast('Shift updated','success')"><i class="fa-solid fa-pen"></i> Edit</button></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Dr. Julia Reynolds</strong><br><span style="font-size:11px;color:var(--text-muted)">Staff ID: DOC-002</span></td>
+                      <td><i class="fa-solid fa-brain" style="color:#10B981"></i> Neurologist</td>
+                      <td>Neurology Center</td>
+                      <td><span class="time-slot-tag"><i class="fa-regular fa-clock"></i> 10:00 AM – 04:00 PM</span></td>
+                      <td><span class="status-badge" style="background:rgba(16,185,129,0.1);color:#10B981;border-color:rgba(16,185,129,0.3)">On Duty</span></td>
+                      <td><button class="btn btn-secondary" style="padding:5px 10px;font-size:11px;" onclick="showToast('Shift updated','success')"><i class="fa-solid fa-pen"></i> Edit</button></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Nurse Priya Sharma</strong><br><span style="font-size:11px;color:var(--text-muted)">Staff ID: NUR-007</span></td>
+                      <td><i class="fa-solid fa-user-nurse" style="color:#F59E0B"></i> Head Nurse</td>
+                      <td>ICU / Emergency</td>
+                      <td><span class="time-slot-tag"><i class="fa-regular fa-clock"></i> 08:00 AM – 08:00 PM</span></td>
+                      <td><span class="status-badge" style="background:rgba(16,185,129,0.1);color:#10B981;border-color:rgba(16,185,129,0.3)">On Duty</span></td>
+                      <td><button class="btn btn-secondary" style="padding:5px 10px;font-size:11px;" onclick="showToast('Shift updated','success')"><i class="fa-solid fa-pen"></i> Edit</button></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Technician Ravi Kumar</strong><br><span style="font-size:11px;color:var(--text-muted)">Staff ID: TECH-012</span></td>
+                      <td><i class="fa-solid fa-microscope" style="color:#3B82F6"></i> Lab Technician</td>
+                      <td>Pathology Lab</td>
+                      <td><span class="time-slot-tag"><i class="fa-regular fa-clock"></i> 09:00 AM – 05:00 PM</span></td>
+                      <td><span class="status-badge status-badge-scheduled">Leave</span></td>
+                      <td><button class="btn btn-secondary" style="padding:5px 10px;font-size:11px;" onclick="showToast('Shift updated','success')"><i class="fa-solid fa-pen"></i> Edit</button></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Dr. Sarah Carter</strong><br><span style="font-size:11px;color:var(--text-muted)">Staff ID: DOC-003</span></td>
+                      <td><i class="fa-solid fa-kit-medical" style="color:#EF4444"></i> ER Director</td>
+                      <td>Emergency ER</td>
+                      <td><span class="time-slot-tag"><i class="fa-regular fa-clock"></i> 08:00 AM – 08:00 PM</span></td>
+                      <td><span class="status-badge" style="background:rgba(239,68,68,0.1);color:#EF4444;border-color:rgba(239,68,68,0.3)">Off Duty</span></td>
+                      <td><button class="btn btn-secondary" style="padding:5px 10px;font-size:11px;" onclick="showToast('Shift updated','success')"><i class="fa-solid fa-pen"></i> Edit</button></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

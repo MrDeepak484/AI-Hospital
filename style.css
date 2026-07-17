@@ -2144,10 +2144,136 @@ footer {
 
 @media (max-width: 768px) {
   header { padding: 16px 0; }
-  .nav-links { display: none; }
-  .header-actions .btn { display: none; }
-  .header-actions .doctor-link { display: none; }
-  .menu-toggle { display: block; }
+  header:not(.dash-header) .nav-links { display: none; }
+  header:not(.dash-header) .header-actions .btn { display: none; }
+  header:not(.dash-header) .header-actions .doctor-link { display: none; }
+  header:not(.dash-header) .menu-toggle { display: block; }
+
+  /* Mobile Dropdown Menu Active State Styles */
+  header:not(.dash-header) .nav-links.active {
+    display: flex !important;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    padding: 30px 24px;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.12);
+    box-shadow: var(--shadow-lg);
+    gap: 15px;
+    z-index: 999;
+    animation: mobile-menu-slide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes mobile-menu-slide {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  header:not(.dash-header) .nav-links.active a {
+    color: var(--text-primary) !important;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    display: block;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+  }
+  
+  header:not(.dash-header) .nav-links.active a:hover {
+    color: var(--color-accent) !important;
+    padding-left: 8px;
+    transition: var(--transition-fast);
+  }
+
+  header:not(.dash-header) .nav-links.active a::after {
+    display: none; /* Hide hover line effect on mobile */
+  }
+
+  header:not(.dash-header) .nav-links.active .nav-cta-mobile {
+    display: block !important;
+    margin-top: 10px;
+  }
+  
+  header:not(.dash-header) .nav-links.active .nav-cta-mobile a {
+    border-bottom: none !important;
+  }
+  
+  header:not(.dash-header) .nav-links.active .nav-cta-mobile a:hover {
+    padding-left: 0;
+  }
+
+  /* Make sure notification bell button and menu toggle button sit nicely on mobile */
+  .header-actions {
+    gap: 16px;
+  }
+
+  /* Ensure dashboard header actions display correctly on mobile */
+  header.dash-header .header-actions {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+  }
+  header.dash-header .header-actions .user-greeting {
+    font-size: 11px !important;
+  }
+  header.dash-header .header-actions .btn {
+    display: inline-flex !important;
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+  }
+  header.dash-header .header-actions .doctor-link {
+    display: inline-flex !important;
+  }
+
+  /* Compact Dashboard Sidebar Navigation on Mobile */
+  .dashboard-sidebar {
+    padding: 12px !important;
+    gap: 12px !important;
+    border-radius: var(--radius-md) !important;
+  }
+  .doctor-snapshot-card,
+  .sidebar-decor {
+    display: none !important;
+  }
+  .doctor-switcher-container {
+    margin-bottom: 0 !important;
+    width: 100%;
+  }
+  .sidebar-nav {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    gap: 8px !important;
+    padding-bottom: 6px !important;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+  .sidebar-nav::-webkit-scrollbar {
+    height: 4px !important;
+    display: block !important;
+  }
+  .sidebar-nav::-webkit-scrollbar-thumb {
+    background: #CBD5E1 !important;
+    border-radius: var(--radius-full) !important;
+  }
+  .nav-tab-btn {
+    flex-shrink: 0 !important;
+    padding: 8px 14px !important;
+    font-size: 13px !important;
+    border-radius: var(--radius-sm) !important;
+  }
+  /* Bottom active indicator bar instead of left vertical line */
+  .nav-tab-btn.active::before {
+    left: 15% !important;
+    bottom: 0 !important;
+    top: auto !important;
+    width: 70% !important;
+    height: 3px !important;
+  }
+
   .hero { padding: 130px 0 80px; }
   .hero-content h1 { font-size: 36px; }
   .hero-content p { font-size: 15px; }
@@ -3740,13 +3866,13 @@ footer {
 header:not(.scrolled):not(.dash-header) .logo-text {
   color: #ffffff !important;
 }
-header:not(.scrolled):not(.dash-header) .nav-links a {
+header:not(.scrolled):not(.dash-header) .nav-links:not(.active) a {
   color: rgba(255, 255, 255, 0.8) !important;
 }
-header:not(.scrolled):not(.dash-header) .nav-links a:hover {
+header:not(.scrolled):not(.dash-header) .nav-links:not(.active) a:hover {
   color: #ffffff !important;
 }
-header:not(.scrolled):not(.dash-header) .nav-links a.nav-link-active {
+header:not(.scrolled):not(.dash-header) .nav-links:not(.active) a.nav-link-active {
   color: #ffffff !important;
 }
 header:not(.scrolled):not(.dash-header) .menu-toggle i {

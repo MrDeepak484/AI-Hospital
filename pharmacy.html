@@ -68,6 +68,9 @@
             <button class="nav-tab-btn" data-tab="inventory" onclick="switchTab('inventory')">
               <i class="fa-solid fa-warehouse"></i> Stock & Inventory
             </button>
+            <button class="nav-tab-btn" data-tab="analytics" onclick="switchTab('analytics')">
+              <i class="fa-solid fa-chart-column"></i> Analytics & Insights
+            </button>
           </nav>
         </aside>
 
@@ -165,6 +168,98 @@
                     <!-- Rendered dynamically -->
                   </tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: Analytics & Smart Insights -->
+          <div class="dashboard-tab-content" id="tab-analytics">
+            <div class="tab-header">
+              <h2>Analytics & Smart Insights</h2>
+              <p>AI-powered dispensary performance, drug trend analysis, and automated alerts.</p>
+            </div>
+            <div class="stats-ribbon-grid">
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper green"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                <div class="stat-data">
+                  <span class="stat-label">Dispensed This Week</span>
+                  <span class="stat-value">142</span>
+                </div>
+              </div>
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper purple"><i class="fa-solid fa-brain"></i></div>
+                <div class="stat-data">
+                  <span class="stat-label">AI Accuracy</span>
+                  <span class="stat-value">98.4%</span>
+                </div>
+              </div>
+              <div class="stat-card glass-panel">
+                <div class="stat-icon-wrapper red"><i class="fa-solid fa-robot"></i></div>
+                <div class="stat-data">
+                  <span class="stat-label">Auto Reports Sent</span>
+                  <span class="stat-value">7</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- AI Predictions Panel -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+              <div class="glass-panel">
+                <div class="table-header" style="margin-bottom: 14px;">
+                  <h3><i class="fa-solid fa-brain" style="color:var(--color-accent)"></i> AI Demand Forecast</h3>
+                  <span class="table-subtitle">Next 7 Days</span>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                  <div style="background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.15);border-radius:var(--radius-sm);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+                    <div><strong style="font-size:13px;">Atorvastatin 20mg</strong><p style="font-size:11px;color:var(--text-muted);margin:2px 0 0;">High demand expected — 42 units</p></div>
+                    <span class="status-badge" style="background:rgba(16,185,129,0.1);color:#10B981;border-color:rgba(16,185,129,0.3)">Stock OK</span>
+                  </div>
+                  <div style="background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.15);border-radius:var(--radius-sm);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+                    <div><strong style="font-size:13px;">Topiramate 25mg</strong><p style="font-size:11px;color:var(--text-muted);margin:2px 0 0;">Low stock predicted shortage — Restock soon</p></div>
+                    <span class="status-badge" style="background:rgba(245,158,11,0.1);color:#F59E0B;border-color:rgba(245,158,11,0.3)">⚠ Reorder</span>
+                  </div>
+                  <div style="background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.15);border-radius:var(--radius-sm);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+                    <div><strong style="font-size:13px;">Ibuprofen 400mg</strong><p style="font-size:11px;color:var(--text-muted);margin:2px 0 0;">Critical: Stock below safety threshold</p></div>
+                    <span class="status-badge status-badge-cancelled">⛔ Critical</span>
+                  </div>
+                  <div style="background:rgba(59,130,246,0.04);border:1px solid rgba(59,130,246,0.15);border-radius:var(--radius-sm);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+                    <div><strong style="font-size:13px;">Amoxicillin 500mg</strong><p style="font-size:11px;color:var(--text-muted);margin:2px 0 0;">Moderate demand — 28 units projected</p></div>
+                    <span class="status-badge" style="background:rgba(59,130,246,0.1);color:#3B82F6;border-color:rgba(59,130,246,0.3)">Stock OK</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="glass-panel">
+                <div class="table-header" style="margin-bottom: 14px;">
+                  <h3><i class="fa-solid fa-file-lines" style="color:#10B981"></i> Automated Reports</h3>
+                  <button class="btn btn-primary" style="padding:6px 14px;font-size:11px;" onclick="showToast('Report generated and sent via email','success')"><i class="fa-solid fa-paper-plane"></i> Send Report</button>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                  <div style="background:rgba(112,0,255,0.04);border:1px solid rgba(112,0,255,0.12);border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;gap:10px;">
+                    <i class="fa-solid fa-file-pdf" style="color:var(--color-accent);font-size:18px;"></i>
+                    <div style="flex:1;">
+                      <strong style="font-size:13px;">Daily Dispensary Report</strong>
+                      <p style="font-size:11px;color:var(--text-muted);margin:2px 0 0;">Generated: 17 Jul 2026 &bull; 6:00 AM</p>
+                    </div>
+                    <button class="btn btn-secondary" style="padding:5px 10px;font-size:11px;" onclick="showToast('Report downloaded','success')"><i class="fa-solid fa-download"></i></button>
+                  </div>
+                  <div style="background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.12);border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;gap:10px;">
+                    <i class="fa-solid fa-file-chart-column" style="color:#10B981;font-size:18px;"></i>
+                    <div style="flex:1;">
+                      <strong style="font-size:13px;">Weekly Stock Analytics</strong>
+                      <p style="font-size:11px;color:var(--text-muted);margin:2px 0 0;">Generated: 14 Jul 2026 &bull; 8:00 AM</p>
+                    </div>
+                    <button class="btn btn-secondary" style="padding:5px 10px;font-size:11px;" onclick="showToast('Report downloaded','success')"><i class="fa-solid fa-download"></i></button>
+                  </div>
+                  <div style="background:rgba(59,130,246,0.04);border:1px solid rgba(59,130,246,0.12);border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;gap:10px;">
+                    <i class="fa-solid fa-triangle-exclamation" style="color:#F59E0B;font-size:18px;"></i>
+                    <div style="flex:1;">
+                      <strong style="font-size:13px;">Low Stock Alert Report</strong>
+                      <p style="font-size:11px;color:var(--text-muted);margin:2px 0 0;">AI Triggered: 2 critical items flagged</p>
+                    </div>
+                    <button class="btn btn-secondary" style="padding:5px 10px;font-size:11px;" onclick="showToast('Alert sent to hospital admin','success')"><i class="fa-solid fa-bell"></i></button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -163,11 +163,21 @@
 
     .reg-role-label { font-size:11.5px; font-weight:600; color:var(--text-mid); margin-bottom:8px; }
 
+    .mobile-logo-header {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      text-decoration: none;
+    }
+
     @media (max-width:900px) {
       .portal-wrapper { grid-template-columns:1fr; height:auto; }
       html,body { overflow:auto; }
       .left-panel { display:none; }
       .right-panel { padding:40px 20px; min-height:100vh; }
+      .mobile-logo-header { display: flex !important; }
     }
   </style>
 </head>
@@ -241,6 +251,11 @@
     <!-- RIGHT -->
     <div class="right-panel">
       <div class="auth-card">
+
+        <a href="index.html" class="mobile-logo-header">
+          <img src="assets/images/Logo.png" alt="Vaisoverse" style="height: 32px; width: auto;">
+          <span style="font-size: 20px; font-weight: 800; color: var(--text-dark);">Vaiso<span style="color: var(--blue-1);">verse</span></span>
+        </a>
 
         <div class="card-icon-bubble">
           <i class="fa-solid fa-hospital"></i>

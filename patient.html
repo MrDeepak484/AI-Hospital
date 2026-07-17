@@ -80,6 +80,9 @@
             <button class="nav-tab-btn" data-tab="book" onclick="switchTab('book')">
               <i class="fa-solid fa-calendar-plus"></i> Book Consultation
             </button>
+            <button class="nav-tab-btn" data-tab="tracking" onclick="switchTab('tracking')">
+              <i class="fa-solid fa-location-dot"></i> Treatment Progress
+            </button>
             <button class="nav-tab-btn" data-tab="reports" onclick="switchTab('reports')">
               <i class="fa-solid fa-file-medical"></i> Medical Reports
             </button>
@@ -203,6 +206,139 @@
                   Confirm & Dispatch Appointment
                 </button>
               </form>
+            </div>
+          </div>
+
+          <!-- TAB: Treatment Progress & Patient Tracking -->
+          <div class="dashboard-tab-content" id="tab-tracking">
+            <div class="tab-header">
+              <h2>Treatment Progress & Tracking</h2>
+              <p>Monitor your real-time treatment status, visit history, and discharge follow-up.</p>
+            </div>
+
+            <!-- Patient Tracking Info Card -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;" class="patient-overview-columns">
+              <div class="glass-panel">
+                <div class="table-header" style="margin-bottom: 16px;">
+                  <h3><i class="fa-solid fa-location-dot" style="color:var(--color-accent)"></i> Current Location</h3>
+                  <span class="status-badge" style="background:rgba(16,185,129,0.1);color:#10B981;border-color:rgba(16,185,129,0.3)"><i class="fa-solid fa-circle" style="font-size:8px"></i> Live</span>
+                </div>
+                <div style="background: rgba(112,0,255,0.04); border: 1px solid rgba(112,0,255,0.12); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 14px;">
+                  <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+                    <div style="width:40px; height:40px; border-radius:10px; background:rgba(112,0,255,0.1); display:flex; align-items:center; justify-content:center; color:var(--color-accent); font-size:18px;"><i class="fa-solid fa-bed-pulse"></i></div>
+                    <div>
+                      <strong style="font-size:14px; color:var(--text-primary);">Cardiology Ward — Room 204</strong>
+                      <p style="font-size:12px; color:var(--text-muted); margin:2px 0 0;">Bed 4B &bull; Floor 2 &bull; Block A</p>
+                    </div>
+                  </div>
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                    <div style="font-size:12px; color:var(--text-muted);"><i class="fa-solid fa-user-doctor" style="color:var(--color-accent)"></i> Attending: Dr. Mercer</div>
+                    <div style="font-size:12px; color:var(--text-muted);"><i class="fa-solid fa-user-nurse" style="color:#F59E0B"></i> Nurse: Priya Sharma</div>
+                    <div style="font-size:12px; color:var(--text-muted);"><i class="fa-solid fa-calendar-day" style="color:#3B82F6"></i> Admitted: 15 Jul 2026</div>
+                    <div style="font-size:12px; color:var(--text-muted);"><i class="fa-solid fa-clock" style="color:#10B981"></i> Last Checked: 10:30 AM</div>
+                  </div>
+                </div>
+                <!-- Emergency Alert Box -->
+                <div style="background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.2); border-radius: var(--radius-sm); padding: 12px 14px; display:flex; align-items:center; gap:10px;">
+                  <i class="fa-solid fa-triangle-exclamation" style="color:#EF4444; font-size:16px;"></i>
+                  <div>
+                    <strong style="font-size:13px; color:#EF4444;">Emergency Contact Active</strong>
+                    <p style="font-size:11px; color:var(--text-muted); margin:2px 0 0;">ER Triage notified. Priority Level: Standard</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="glass-panel">
+                <div class="table-header" style="margin-bottom: 16px;">
+                  <h3><i class="fa-solid fa-chart-gantt" style="color:#10B981"></i> Treatment Progress</h3>
+                </div>
+                <!-- Progress Timeline -->
+                <div style="display:flex; flex-direction:column; gap:14px;">
+                  <div style="display:flex; align-items:flex-start; gap:12px;">
+                    <div style="width:32px; height:32px; border-radius:50%; background:#10B981; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; flex-shrink:0;"><i class="fa-solid fa-check"></i></div>
+                    <div>
+                      <strong style="font-size:13px; color:var(--text-primary);">Initial Assessment</strong>
+                      <p style="font-size:11px; color:var(--text-muted); margin:2px 0 0;">15 Jul &bull; Cardiology intake completed</p>
+                    </div>
+                  </div>
+                  <div style="display:flex; align-items:flex-start; gap:12px;">
+                    <div style="width:32px; height:32px; border-radius:50%; background:#10B981; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; flex-shrink:0;"><i class="fa-solid fa-check"></i></div>
+                    <div>
+                      <strong style="font-size:13px; color:var(--text-primary);">Diagnostic Tests</strong>
+                      <p style="font-size:11px; color:var(--text-muted); margin:2px 0 0;">16 Jul &bull; ECG, Lipid Panel — Results Normal</p>
+                    </div>
+                  </div>
+                  <div style="display:flex; align-items:flex-start; gap:12px;">
+                    <div style="width:32px; height:32px; border-radius:50%; background:var(--color-accent); display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; flex-shrink:0;"><i class="fa-solid fa-pills"></i></div>
+                    <div>
+                      <strong style="font-size:13px; color:var(--text-primary);">Medication Started</strong>
+                      <p style="font-size:11px; color:var(--text-muted); margin:2px 0 0;">17 Jul &bull; Atorvastatin + Lisinopril — In Progress</p>
+                    </div>
+                  </div>
+                  <div style="display:flex; align-items:flex-start; gap:12px;">
+                    <div style="width:32px; height:32px; border-radius:50%; background:rgba(241,245,249,0.5); border:2px dashed var(--border-color); display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:13px; flex-shrink:0;"><i class="fa-solid fa-stethoscope"></i></div>
+                    <div>
+                      <strong style="font-size:13px; color:var(--text-muted);">Follow-up Consultation</strong>
+                      <p style="font-size:11px; color:var(--text-muted); margin:2px 0 0;">Scheduled: 20 Jul &bull; Pending</p>
+                    </div>
+                  </div>
+                  <div style="display:flex; align-items:flex-start; gap:12px;">
+                    <div style="width:32px; height:32px; border-radius:50%; background:rgba(241,245,249,0.5); border:2px dashed var(--border-color); display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:13px; flex-shrink:0;"><i class="fa-solid fa-door-open"></i></div>
+                    <div>
+                      <strong style="font-size:13px; color:var(--text-muted);">Discharge & Follow-up Plan</strong>
+                      <p style="font-size:11px; color:var(--text-muted); margin:2px 0 0;">Est. 22 Jul &bull; Discharge instructions pending</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Visit History -->
+            <div class="appointments-table-container glass-panel" style="margin-top: 0;">
+              <div class="table-header">
+                <h3><i class="fa-solid fa-clock-rotate-left"></i> Visit History</h3>
+                <span class="table-subtitle">All previous consultations</span>
+              </div>
+              <div class="table-responsive">
+                <table class="dashboard-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Physician</th>
+                      <th>Department</th>
+                      <th>Reason</th>
+                      <th>Notes</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>15 Jul 2026</td>
+                      <td><strong>Dr. Alan Mercer</strong></td>
+                      <td>Cardiology</td>
+                      <td>Arrhythmia Checkup</td>
+                      <td>BP: 140/90, Prescribed Atorvastatin</td>
+                      <td><span class="status-badge" style="background:rgba(16,185,129,0.1);color:#10B981;border-color:rgba(16,185,129,0.3)">In Treatment</span></td>
+                    </tr>
+                    <tr>
+                      <td>10 Jun 2026</td>
+                      <td><strong>Dr. Sarah Carter</strong></td>
+                      <td>Emergency ER</td>
+                      <td>Chest Pain — Emergency</td>
+                      <td>ECG normal. Observed for 4 hours. Discharged stable.</td>
+                      <td><span class="status-badge status-badge-completed">Discharged</span></td>
+                    </tr>
+                    <tr>
+                      <td>22 Mar 2026</td>
+                      <td><strong>Dr. Alan Mercer</strong></td>
+                      <td>Cardiology</td>
+                      <td>Annual Heart Checkup</td>
+                      <td>Lipid panel: Normal. Advised lifestyle changes.</td>
+                      <td><span class="status-badge status-badge-completed">Completed</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 

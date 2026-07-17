@@ -82,27 +82,31 @@ function setupMobileMenu() {
   const menuToggle = document.getElementById('menu-toggle');
   const navLinks = document.getElementById('nav-links');
   
-  menuToggle.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-    const icon = menuToggle.querySelector('i');
-    if (navLinks.classList.contains('active')) {
-      icon.className = 'fa-solid fa-xmark';
-      navLinks.style.display = 'flex';
-      navLinks.style.flexDirection = 'column';
-      navLinks.style.position = 'absolute';
-      navLinks.style.top = '100%';
-      navLinks.style.left = '0';
-      navLinks.style.width = '100%';
-      navLinks.style.background = 'rgba(255, 255, 255, 0.98)';
-      navLinks.style.padding = '30px 24px';
-      navLinks.style.borderBottom = '1px solid rgba(0, 82, 255, 0.08)';
-      navLinks.style.boxShadow = '0 10px 20px rgba(0,0,0,0.05)';
-      navLinks.style.gap = '20px';
-    } else {
-      icon.className = 'fa-solid fa-bars-staggered';
-      navLinks.removeAttribute('style');
-    }
-  });
+  if (menuToggle && navLinks) {
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      const icon = menuToggle.querySelector('i');
+      if (icon) {
+        if (navLinks.classList.contains('active')) {
+          icon.className = 'fa-solid fa-xmark';
+        } else {
+          icon.className = 'fa-solid fa-bars-staggered';
+        }
+      }
+    });
+
+    // Close mobile menu when a navigation link is clicked
+    const links = navLinks.querySelectorAll('a');
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        const icon = menuToggle.querySelector('i');
+        if (icon) {
+          icon.className = 'fa-solid fa-bars-staggered';
+        }
+      });
+    });
+  }
 }
 
 // 3. Chatbot Toggle Visibility
